@@ -4,7 +4,7 @@ BOOMBOX KIDS™ is a browser-based creative prompt studio for original kids-appa
 
 ## Use the app
 
-Open the public GitHub Pages site from the repository’s About section.
+Open the public app: **[Launch BOOMBOX KIDS™ Prompt Studio](https://sweetrose37.github.io/boombox-kids-generator/)**
 
 The finished product created by this application is a production prompt. It does not generate images, place print orders, or connect to a printer.
 
