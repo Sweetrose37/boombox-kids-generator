@@ -5,6 +5,7 @@ export const options = {
   mood: ['Playful', 'Bold', 'Joyful', 'Cool', 'Dreamy', 'Confident', 'Sporty', 'Sweet', 'Artistic', 'Future-forward'],
   character: ['No character', 'Original human character', 'Original animal mascot', 'Original fantasy friend', 'Original object character', 'You Choose'],
   mascot: ['Bear', 'Bunny', 'Cat', 'Dog', 'Lion', 'Fox', 'Frog', 'Panda', 'Dinosaur', 'Fantasy creature'],
+  ethnicity: ['Not specified', 'African American / Black', 'Latino / Hispanic', 'Asian', 'South Asian', 'Middle Eastern / North African', 'Indigenous', 'White / European', 'Multiracial', 'Surprise Me', 'Custom'],
   hairstyle: ['Not specified', 'Coils', 'Curls', 'Puffs', 'Afro', 'Braids', 'Twists', 'Cornrows', 'Locs', 'Buns', 'Ponytail', 'Silk press', 'Short cut', 'Protective style', 'Curly layers', 'Wavy bob', 'Long layers', 'You Choose'],
   fashion: ['Playful casual', 'Original streetwear', 'Sporty', 'Preppy', 'Soft playful', 'Retro', 'Y2K-inspired', 'Varsity-inspired', 'Skate-inspired', 'Dance-inspired', 'Music-inspired', 'Art-kid', 'Futuristic', 'Playful luxury', 'Casual elevated', 'Dressy', 'Coordinated sets', 'Fashion-lab', 'Soft boutique', 'Bold artistic'],
   artStyle: ['Graffiti pop', 'Polished cartoon', 'Chibi-inspired original', 'Storybook', 'Retro cartoon', 'Cut-paper collage', 'Crayon texture', 'Marker art', 'Watercolor', 'Comic', 'Pop art', 'Fashion illustration', 'Sticker art', 'Screen-print texture', 'Patchwork', 'Mixed media', 'Vector-like graphic', 'Soft baby illustration', 'Bold tween editorial', 'Teen streetwear editorial'],
@@ -25,7 +26,7 @@ export const options = {
 
 export const defaults = {
   age: 'Toddler', product: 'T-shirt', theme: 'Music makers', mood: 'Playful', character: 'Original animal mascot', mascot: 'Bear',
-  hairstyle: 'Not specified', fashion: 'Original streetwear', artStyle: 'Graffiti pop', pose: 'Dancing',
+  ethnicity: 'Not specified', customCulturalBackground: '', hairstyle: 'Not specified', fashion: 'Original streetwear', artStyle: 'Graffiti pop', pose: 'Dancing',
   typography: 'Playful bubble type', phrase: 'CREATE LOUD', palette: 'Neon cyan, pink, purple, and yellow',
   composition: 'Centered hero graphic', material: 'Faux chenille', production: 'DTF', sizing: 'Toddler-proportioned placement',
   outfit: 'Hoodie + joggers', placement: 'Front + sleeve accent', relationship: 'Coordinated set', collectionCount: '4', coordination: 'Optional coordinated accessories', intensity: 'PLAYFUL',
@@ -33,7 +34,7 @@ export const defaults = {
 
 export const guidedSteps = [
   ['age', 'AGE / DEVELOPMENT'], ['product', 'GARMENT / PRODUCT'], ['theme', 'THEME'], ['mood', 'DESIGN MOOD'],
-  ['character', 'CHARACTER DIRECTION'], ['hairstyle', 'HAIRSTYLE'], ['fashion', 'FASHION DIRECTION'], ['artStyle', 'ART STYLE'],
+  ['character', 'CHARACTER DIRECTION'], ['ethnicity', 'ETHNICITY / CULTURAL BACKGROUND'], ['hairstyle', 'HAIRSTYLE'], ['fashion', 'FASHION DIRECTION'], ['artStyle', 'ART STYLE'],
   ['pose', 'POSE / ACTION'], ['typography', 'TYPOGRAPHY'], ['phrase', 'EXACT PHRASE'], ['palette', 'COLOR PALETTE'],
   ['composition', 'COMPOSITION'], ['material', 'FAUX MATERIAL / EFFECT'], ['production', 'PRINT METHOD'], ['intensity', 'CREATIVE INTENSITY'], ['coordination', 'OUTFIT COORDINATION'],
 ]

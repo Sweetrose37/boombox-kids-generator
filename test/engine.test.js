@@ -86,6 +86,30 @@ test('human diversity varies independent traits without identity inference', () 
   assert.match(prompt,/describe no race, ethnicity/i)
 })
 
+test('human ethnicity selection is explicit and never derives appearance or styling traits', () => {
+  const prompt = composePrompt({ ...defaults, character:'Original human character', ethnicity:'African American / Black', hairstyle:'Wavy bob' }).prompt
+  assert.match(prompt,/Ethnicity \/ cultural background: African American \/ Black/i)
+  assert.match(prompt,/do not stereotype it or derive skin tone, hair texture, hairstyle, facial features, body type, fashion, pose, accessories, or cultural clothing/i)
+  assert.match(prompt,/age-appropriate wavy bob/i)
+})
+
+test('ethnicity Not specified is omitted while Surprise Me and Custom pass through', () => {
+  const unspecified = composePrompt({ ...defaults, character:'Original human character', ethnicity:'Not specified' }).prompt
+  const surprise = composePrompt({ ...defaults, character:'Original human character', ethnicity:'Surprise Me' }).prompt
+  const custom = composePrompt({ ...defaults, character:'Original human character', ethnicity:'Custom', customCulturalBackground:'Afro-Caribbean and Filipino' }).prompt
+  const mascot = composePrompt({ ...defaults, character:'Original animal mascot', ethnicity:'Asian' }).prompt
+  assert.doesNotMatch(unspecified,/Ethnicity \/ cultural background:/i)
+  assert.match(surprise,/Ethnicity \/ cultural background: Surprise Me/i)
+  assert.match(custom,/Ethnicity \/ cultural background: Afro-Caribbean and Filipino/i)
+  assert.doesNotMatch(mascot,/Ethnicity \/ cultural background:/i)
+})
+
+test('Shake preserves a locked ethnicity selection', () => {
+  const result = shake({ ...defaults, character:'Original human character', ethnicity:'Multiracial' },new Set(['character','ethnicity']),new Set())
+  assert.equal(result.character,'Original human character')
+  assert.equal(result.ethnicity,'Multiracial')
+})
+
 test('garment placement changes by garment construction', () => {
   assert.match(garmentDirection('Hoodie').direction,/front.*back/i)
   assert.match(garmentDirection('Varsity jacket').direction,/left chest.*back/i)

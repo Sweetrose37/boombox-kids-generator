@@ -103,3 +103,11 @@ test('site footer permanently credits Crown & Craft Studio across responsive lay
   assert.match(css,/\.studio-credit\{flex:1 0 100%/)
   assert.match(css,/@media \(max-width:520px\).*\.studio-credit\{width:100%;flex-basis:auto/s)
 })
+
+test('human character UI exposes persistent ethnicity and custom cultural background controls',async()=>{
+  const [optionsSource,ui]=await Promise.all(['../data/options.js','../ui/workspace.js'].map((path)=>readFile(new URL(path,import.meta.url),'utf8')))
+  assert.match(optionsSource,/ethnicity: \['Not specified'.*'Surprise Me', 'Custom'\]/)
+  assert.match(optionsSource,/\['ethnicity', 'ETHNICITY \/ CULTURAL BACKGROUND'\]/)
+  assert.match(ui,/CUSTOM CULTURAL BACKGROUND/)
+  assert.match(ui,/isHumanCharacter\(state\.character\).*field\('ethnicity'/s)
+})
