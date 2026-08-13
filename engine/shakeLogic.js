@@ -4,6 +4,7 @@ import { resolveCompatibility } from './compatibility.js'
 import { noveltyScore, remember } from './originality.js'
 
 const keys = ['age','product','theme','mood','character','mascot','ethnicity','hairstyle','fashion','artStyle','pose','typography','palette','composition','material','production','sizing','intensity']
+const replacementKeys = new Set(['artStyle','typography','composition'])
 const pick = (list) => list[Math.floor(Math.random() * list.length)]
 const visualTwists = ['unexpected scale shift','controlled negative-space reveal','single motif transformed across type','inside-out color hierarchy','rhythmic panel-to-graphic echo','foreground/background type exchange','surreal-but-safe visual metaphor','dramatic type architecture','bold asymmetrical crop','layered graphic planes with clean occlusion','repeating visual cadence','character-to-type interaction','expressive framing with unusual negative space','fashion-poster silhouette system']
 
@@ -13,10 +14,19 @@ export function shake(current, locks = new Set(), previous = new Set()) {
   let tries = 0
   do {
     candidate = { ...current }
-    keys.forEach((key) => { if (!locks.has(key)) candidate[key] = pick(options[key].filter((v) => v !== 'You Choose')) })
+    keys.forEach((key) => {
+      if (locks.has(key)) return
+      const choices = options[key].filter((value) => value !== 'You Choose' && (!replacementKeys.has(key) || value !== current[key]))
+      candidate[key] = pick(choices)
+    })
     if (!locks.has('phrase')) candidate.phrase = pick(['CREATE LOUD', 'DREAM IN COLOR', 'FUTURE LEGEND', 'KINDNESS ROCKS', 'PLAY ALL DAY', 'BORN TO CREATE'])
-    candidate.visualTwist = pick(visualTwists)
+    candidate.visualTwist = pick(visualTwists.filter((value) => value !== current.visualTwist))
     candidate = resolveCompatibility(resolveAgePriorities(candidate).selections).selections
+    if (!locks.has('composition') && candidate.composition === current.composition) {
+      const compatibleCompositions = options.composition.filter((value) => value !== 'You Choose' && value !== current.composition && !(candidate.production === 'DTF' && value === 'All-over composition'))
+      candidate.composition = pick(compatibleCompositions)
+      candidate = resolveCompatibility(candidate).selections
+    }
     signature = keys.map((key) => candidate[key]).join('|')
     tries += 1
   } while (previous.has(signature) && tries < 20)

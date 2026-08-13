@@ -219,6 +219,25 @@ test('shake preserves locks and tracks generated combinations', () => {
   assert.equal(history.size, 1)
 })
 
+test('every Shake replaces unlocked art style typography and composition', () => {
+  let current = { ...defaults }
+  for (let index=0; index<25; index += 1) {
+    const next = shake(current,new Set(),new Set())
+    assert.notEqual(next.artStyle,current.artStyle)
+    assert.notEqual(next.typography,current.typography)
+    assert.notEqual(next.composition,current.composition)
+    current = next
+  }
+})
+
+test('Shake never disposes locked art style typography or composition', () => {
+  const locks = new Set(['artStyle','typography','composition'])
+  const result = shake(defaults,locks,new Set())
+  assert.equal(result.artStyle,defaults.artStyle)
+  assert.equal(result.typography,defaults.typography)
+  assert.equal(result.composition,defaults.composition)
+})
+
 test('Match My Mini creates coordinated non-identical looks', () => {
   const result = buildMatchMini(defaults)
   assert.match(result.prompt, /LOOK ONE:/)

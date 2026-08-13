@@ -111,3 +111,9 @@ test('human character UI exposes persistent ethnicity and custom cultural backgr
   assert.match(ui,/CUSTOM CULTURAL BACKGROUND/)
   assert.match(ui,/isHumanCharacter\(state\.character\).*field\('ethnicity'/s)
 })
+
+test('Shake UI explains automatic replacement and lock protection',async()=>{
+  const ui=await readFile(new URL('../ui/workspace.js',import.meta.url),'utf8')
+  assert.match(ui,/Every shake replaces the previous unlocked art style, typography, and composition/)
+  assert.match(ui,/Lock what you love before shaking/)
+})
