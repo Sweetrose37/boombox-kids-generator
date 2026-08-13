@@ -94,3 +94,12 @@ test('creation and Quick Build cards reflow before laptop-width content can over
   assert.match(css,/\.mode-card h2\{position:absolute;left:26px;top:38px;width:54%/)
   assert.match(css,/\.mode-card footer\{left:16px;right:16px;bottom:16px;min-height:88px/)
 })
+
+test('site footer permanently credits Crown & Craft Studio across responsive layouts',async()=>{
+  const [html,css]=await Promise.all(['../index.html','../styles.css'].map((path)=>readFile(new URL(path,import.meta.url),'utf8')))
+  assert.match(html,/class="studio-credit"/)
+  assert.match(html,/POWERED BY/)
+  assert.match(html,/CROWN &amp; CRAFT STUDIO/)
+  assert.match(css,/\.studio-credit\{flex:1 0 100%/)
+  assert.match(css,/@media \(max-width:520px\).*\.studio-credit\{width:100%;flex-basis:auto/s)
+})

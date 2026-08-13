@@ -1,6 +1,6 @@
 import { ageIntelligence } from '../data/ages.js'
 
-export const ageProfiles = Object.fromEntries(Object.entries(ageIntelligence).map(([age,p]) => [age, `${p.body}, ${p.posture}, ${p.fashion}, ${p.accessories}, ${p.graphics}, ${p.typography}, ${p.placement}, expressions limited to ${p.expressions}, and safe interaction limited to ${p.objects}`]))
+export const ageProfiles = Object.fromEntries(Object.entries(ageIntelligence).map(([age,p]) => [age, `${p.body}, ${p.posture}, ${p.actions}, ${p.fashion}, ${p.accessories}, ${p.placement}, expressions appropriate to ${p.expressions}, and safe interaction limited to ${p.objects}`]))
 
 function normalizedAge(age='') {
   if(ageIntelligence[age])return age
@@ -22,10 +22,10 @@ const babyProducts = ['Bodysuit', 'Baby tee']
 const youthProducts = ['T-shirt','Raglan','Tank','Sweatshirt','Hoodie','Crewneck','Varsity jacket','Bomber jacket','Denim jacket','Dress','Skirt','Skort','Shorts','Joggers','Leggings','Jeans','Cargo pants','Romper','Overalls','Matching set','Tracksuit','Pajamas','Outerwear','Hat','Bag','Shoes']
 
 const priorityRules = {
-  Newborn: { products: ['Bodysuit'], pose: 'Supported restful pose', fashion: 'Soft boutique', sizing: 'Baby-safe placement' },
-  '0–3 Months': { products: babyProducts, pose: 'Supported restful pose', fashion: 'Soft boutique', sizing: 'Baby-safe placement' },
-  '3–6 Months': { products: babyProducts, pose: 'Supported seated pose', fashion: 'Playful casual', sizing: 'Baby-safe placement' },
-  '6–12 Months': { products: [...babyProducts, 'T-shirt'], pose: 'Stable seated or crawling-friendly play pose', fashion: 'Playful casual', sizing: 'Baby-safe placement' },
+  Newborn: { products: ['Bodysuit'], pose: 'Supported restful pose', sizing: 'Baby-safe placement' },
+  '0–3 Months': { products: babyProducts, pose: 'Supported restful pose', sizing: 'Baby-safe placement' },
+  '3–6 Months': { products: babyProducts, pose: 'Supported seated pose', sizing: 'Baby-safe placement' },
+  '6–12 Months': { products: [...babyProducts, 'T-shirt'], pose: 'Stable seated or crawling-friendly play pose', sizing: 'Baby-safe placement' },
   Toddler: { products: ['T-shirt','Raglan','Sweatshirt','Hoodie','Crewneck','Denim jacket','Dress','Skirt','Skort','Shorts','Joggers','Leggings','Jeans','Cargo pants','Romper','Overalls','Matching set','Tracksuit','Pajamas','Outerwear','Hat','Bag','Shoes'], poses: ['Standing naturally', 'Dancing', 'Jumping', 'Walking with energy', 'Seated playfully', 'You Choose'], pose: 'Standing naturally', sizing: 'Toddler-proportioned placement' },
   'Little Kids': { products: youthProducts, sizingFallback: 'Standard youth fit' },
   'Big Kids': { products: youthProducts, sizingFallback: 'Standard youth fit' },
@@ -62,9 +62,8 @@ export function resolveAgePriorities(input) {
   if (interpretedPose !== selections.pose) replace('pose', interpretedPose, `${age} action translated to a developmentally plausible equivalent`)
   else if (rules.poses && !rules.poses.includes(selections.pose)) replace('pose', rules.pose, `${age} movement and balance compatibility`)
   else if (rules.pose) replace('pose', rules.pose, `${age} developmental posing priority`)
-  if (rules.fashion) replace('fashion', rules.fashion, `${age} fashion priority`)
-  else if (age === 'Tweens' && /adult|glamour|sexy|mature/i.test(selections.fashion || '')) replace('fashion','Bold artistic','tween fashion translated without adult styling')
-  else if (age === 'Teens 13â€“17' && /adult|glamour|sexy|mature/i.test(selections.fashion || '')) replace('fashion','Casual elevated','teen fashion translated to remain clearly under age 18')
+  if (age === 'Tweens' && /adult|glamour|sexy|mature/i.test(selections.fashion || '')) replace('fashion','Bold artistic','tween fashion translated without adult styling')
+  else if (age === 'Teens 13–17' && /adult|glamour|sexy|mature/i.test(selections.fashion || '')) replace('fashion','Casual elevated','teen fashion translated to remain clearly under age 18')
   if (rules.sizing) replace('sizing', rules.sizing, `${age} placement and fit priority`)
   if (rules.sizingFallback && ['Baby-safe placement', 'Toddler-proportioned placement'].includes(selections.sizing)) replace('sizing', rules.sizingFallback, `${age} placement and fit compatibility`)
 

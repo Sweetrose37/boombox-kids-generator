@@ -42,9 +42,9 @@ test('age priority resolves infant conflicts before composition', () => {
   const resolved = resolveAgePriorities({ ...defaults, age: 'Newborn', product: 'Varsity jacket', pose: 'Skating', fashion: 'Original streetwear', sizing: 'Oversized youth fit' })
   assert.equal(resolved.selections.product, 'Bodysuit')
   assert.match(resolved.selections.pose, /supported reclined or safely held pose/i)
-  assert.equal(resolved.selections.fashion, 'Soft boutique')
+  assert.equal(resolved.selections.fashion, 'Original streetwear')
   assert.equal(resolved.selections.sizing, 'Baby-safe placement')
-  assert.ok(resolved.resolutions.length >= 4)
+  assert.ok(resolved.resolutions.length >= 3)
 })
 
 test('newborn standing is translated rather than discarded', () => {
@@ -95,17 +95,60 @@ test('garment placement changes by garment construction', () => {
 test('Creative Intensity levels differ while baby safety wins', () => {
   const playful = composePrompt({ ...defaults, intensity:'PLAYFUL' }).prompt
   const maxBaby = composePrompt({ ...defaults, age:'Newborn', intensity:'BOOMBOX MODE' }).prompt
-  assert.match(playful,/clean, colorful, fun/i)
-  assert.match(maxBaby,/maximum/i)
-  assert.match(maxBaby,/not mature posing, complex accessories/i)
+  assert.match(playful,/colorful, imaginative, cheerful/i)
+  assert.match(maxBaby,/maximum BOOMBOX creative imagination/i)
+  assert.match(maxBaby,/keep posture, interaction, clothing construction, and anatomy developmentally accurate/i)
 })
 
-test('baby art complexity and palette conflicts are softened', () => {
+test('baby art style and palette remain creatively independent from developmental rules', () => {
   const result = composePrompt({ ...defaults, age:'0–3 Months', artStyle:'Teen streetwear editorial', palette:'Street neon' })
-  assert.match(result.prompt,/gentle rounded forms and low visual complexity/i)
-  assert.match(result.prompt,/soft baby pastels/i)
-  assert.ok(result.resolutions.some((item) => item.field === 'artStyle'))
-  assert.ok(result.resolutions.some((item) => item.field === 'palette'))
+  assert.match(result.prompt,/under-18 streetwear editorial energy/i)
+  assert.match(result.prompt,/electric cyan.*acid yellow and hot pink/i)
+  assert.doesNotMatch(result.prompt,/soft baby pastels/i)
+  assert.ok(!result.resolutions.some((item) => ['artStyle','palette'].includes(item.field)))
+})
+
+test('patch case 1: newborn BOOMBOX futuristic holographic oversized type stays bold and developmentally accurate', () => {
+  const result = composePrompt({ ...defaults, age:'Newborn', intensity:'BOOMBOX MODE', fashion:'Futuristic', material:'Faux holographic', typography:'Dimensional type', palette:'Street neon' })
+  assert.match(result.prompt,/newborn proportions/i)
+  assert.match(result.prompt,/supported/i)
+  assert.match(result.prompt,/maximum BOOMBOX creative imagination/i)
+  assert.match(result.prompt,/spectral shift/i)
+  assert.match(result.prompt,/simulated dimensional lettering/i)
+  assert.match(result.prompt,/small garment canvas instead of deleting it/i)
+  assert.doesNotMatch(result.prompt,/soft baby pastels|low visual complexity/i)
+})
+
+test('patch case 2: toddler EXTRA mixed media and dimensional type use controlled maximalism', () => {
+  const result = composePrompt({ ...defaults, age:'Toddler', intensity:'EXTRA', artStyle:'Mixed media', typography:'Dimensional type' })
+  assert.match(result.prompt,/toddler proportions/i)
+  assert.match(result.prompt,/controlled maximalism/i)
+  assert.match(result.prompt,/combination of two complementary media/i)
+  assert.match(result.prompt,/simulated dimensional lettering/i)
+})
+
+test('patch case 3: Big Kids BOLD editorial streetwear is sophisticated without adultization', () => {
+  const result = composePrompt({ ...defaults, age:'Big Kids', intensity:'BOLD', fashion:'Original streetwear', artStyle:'Fashion editorial illustration' })
+  assert.match(result.prompt,/school-age proportions/i)
+  assert.match(result.prompt,/composition drama, dimensionality/i)
+  assert.match(result.prompt,/sophisticated youth-fashion graphics/i)
+  assert.match(result.prompt,/without adultizing/i)
+})
+
+test('patch case 4: tween BOOMBOX treatment permits advanced fashion and faux materials without adult styling', () => {
+  const result = composePrompt({ ...defaults, age:'Tweens', intensity:'BOOMBOX MODE', fashion:'Fashion-lab', artStyle:'Mixed media', material:'Faux chenille' })
+  assert.match(result.prompt,/visibly pre-adult/i)
+  assert.match(result.prompt,/fashion-editorial graphic thinking/i)
+  assert.match(result.prompt,/looped yarn-like surface/i)
+  assert.match(result.prompt,/without adultizing/i)
+})
+
+test('patch case 5: newborn neon graffiti lettering survives age resolution', () => {
+  const result = composePrompt({ ...defaults, age:'Newborn', palette:'Street neon', typography:'Original graffiti lettering' })
+  assert.match(result.prompt,/newborn proportions/i)
+  assert.match(result.prompt,/electric cyan.*acid yellow and hot pink/i)
+  assert.match(result.prompt,/original graffiti-inspired lettering/i)
+  assert.doesNotMatch(result.prompt,/soft baby pastels/i)
 })
 
 test('tween and teen direction remains explicitly under-adult', () => {
@@ -165,12 +208,14 @@ test('Outfit Builder provides placement-aware multiple garment direction', () =>
   assert.match(result.prompt, /GARMENT 1 — HOODIE/)
   assert.match(result.prompt, /GARMENT 2 — JOGGERS/)
   assert.match(result.prompt, /placement-aware direction/i)
+  assert.match(result.prompt, /distribute the outfit's visual information/i)
 })
 
 test('Collection Builder forces varied prompts at requested count', () => {
   const result = buildCollection({ ...defaults, collectionCount: '6' })
   assert.equal((result.prompt.match(/COLLECTION PROMPT/g) || []).length, 6)
   assert.match(result.direction, /not recolors/i)
+  assert.deepEqual(result.items.slice(0,5).map((item)=>item.settings.intensity),['PLAYFUL','POPPIN’','BOLD','EXTRA','BOOMBOX MODE'])
 })
 
 test('Remix preserves source and exact phrase', () => {
@@ -178,6 +223,8 @@ test('Remix preserves source and exact phrase', () => {
   const result = remixPrompt(source, ['Make it more fashion-forward', 'DTF optimization'])
   assert.match(result.prompt, /LOUD & KIND!/) 
   assert.match(result.prompt, /Preserve the central concept/i)
+  assert.match(result.prompt, /scale, typography interaction, composition, dimensionality/i)
+  assert.match(result.prompt, /not by piling on props/i)
   assert.equal(result.production, 'DTF')
 })
 

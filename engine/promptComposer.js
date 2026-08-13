@@ -4,6 +4,7 @@ import { hairLibrary, humanDiversity, isHumanCharacter, isMascotCharacter, masco
 import { fashionDirection } from '../data/fashion.js'
 import { artStyleLibrary, compositionLibrary, materialDirection, paletteDirection, typographyLibrary } from '../data/visualIntelligence.js'
 import { intensityDirection } from './intensity.js'
+import { controlledMaximalismCheck, creativeVolumeDirection } from './creativeVolume.js'
 
 const clean = (value, fallback) => value && value !== 'You Choose' ? value : fallback
 const choose = (list, seed, offset=0) => list[(seed + offset) % list.length]
@@ -35,16 +36,18 @@ export function composePrompt(input, context = {}) {
   const prompt = [
     imageExecutionLock,
     `Create an original, production-ready BOOMBOX KIDS™ kids-apparel design built around the concept “${s.theme || 'creative confidence'},” with a ${clean(s.mood, 'playful').toLowerCase()} emotional tone.`,
-    `Design specifically for ${s.age || 'Toddler'}: use ${ageDirection(s.age)}. Never make the child appear younger, older, or adult.`,
+    `Developmental appropriateness for ${s.age || 'Toddler'}: use ${ageDirection(s.age)}. Never make the child appear younger, older, or adult. Developmental rules may alter how an idea is depicted but must not erase what makes it creative.`,
     `Apply the artwork to a ${s.product || 'T-shirt'} with ${clean(s.sizing, 'age-appropriate youth fit').toLowerCase()} and structurally believable garment construction.${placementText}`,
     `Character direction: ${character.toLowerCase()}.${mascot}${diversity} Pose or action: ${clean(s.pose, 'a natural age-appropriate action').toLowerCase()}.${hair} Do not assume gender, race, ethnicity, nationality, skin tone, hair texture, culture, religion, or family structure; honor only traits explicitly supplied and avoid stereotypes or tokenism.`,
     `Fashion direction: ${fashionDirection(s.fashion)}; keep it wearable, brand-free, age-appropriate, visually interesting, and free of recognizable commercial logos, branded footwear or bags, and trademarked fashion identifiers.${coordination}`,
     `Composition: ${compositionLibrary[s.composition] || clean(s.composition, 'clear balanced composition').toLowerCase()}. Art style: ${artStyleLibrary[s.artStyle] || clean(s.artStyle, 'polished original illustration').toLowerCase()}. Keep the focal hierarchy clear and readable at garment distance.${twist}`,
     `Creative intensity — ${s.intensity || 'PLAYFUL'}: ${intensityDirection(s.intensity, s.age)}`,
+    `Creative-volume system: ${creativeVolumeDirection(s.age, s.intensity)}`,
     type,
     `Use the curated ${clean(s.palette, 'balanced kid-friendly palette')} palette: ${paletteDirection(s.palette)}. Maintain intentional contrast and controlled color distribution.`,
     material,
     production,
+    controlledMaximalismCheck(),
     'Object discipline: add no crowns, stars, hearts, sunglasses, backpacks, paint cans, boomboxes, headphones, sports equipment, toys, graffiti splashes, jewelry, extra characters, or extra slogans unless explicitly requested by the concept; every object must earn its place. Quality safeguards: believable age-appropriate anatomy, correct limb count, natural hands and finger structure, natural posture, coherent facial features, correctly rooted hair, structurally believable garments, no duplicate body parts, fused limbs, warped faces, floating accessories, accidental duplicate characters, random text, brand logos, copyrighted characters, protected mascots, or trademarked graphics.',
   ].join(' ')
 
