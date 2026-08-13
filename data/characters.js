@@ -27,10 +27,19 @@ export const hairLibrary = {
   'Long layers': 'age-appropriate long layers with natural roots, density, and gravity',
 }
 
+export function hairDirection(name='') {
+  if (!name || ['Not specified','You Choose'].includes(name)) return ''
+  return hairLibrary[name] || `an age-appropriate ${name.toLowerCase()} hairstyle with believable roots, density, construction, weight, and gravity`
+}
+
 export const mascotLibrary = {
   Bear: 'an original warm, sturdy bear mascot', Bunny: 'an original energetic bunny mascot', Cat: 'an original clever cat mascot', Dog: 'an original friendly dog mascot',
   Lion: 'an original confident young lion mascot', Fox: 'an original quick, curious fox mascot', Frog: 'an original joyful frog mascot', Panda: 'an original playful panda mascot',
   Dinosaur: 'an original friendly dinosaur mascot', 'Fantasy creature': 'an original fantasy-friendly creature with a wholly new silhouette',
+}
+
+export function mascotDirection(name='Bear') {
+  return mascotLibrary[name] || `an entirely original, friendly ${String(name).toLowerCase()} mascot with a distinctive new silhouette and no resemblance to any protected character or commercial mascot`
 }
 
 export function isHumanCharacter(character='') { return character.includes('human') }

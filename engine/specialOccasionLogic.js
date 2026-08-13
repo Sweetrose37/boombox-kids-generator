@@ -15,6 +15,6 @@ export function buildSpecialOccasion(state={}) {
   const respect=culturalOccasions.test(occasion)
     ? 'Use only respectful, contextually appropriate visual language for the selected celebration. Do not combine unrelated traditions, invent sacred symbols or scripture, caricature a culture or religion, or infer the character’s identity from the occasion.'
     : 'Use celebration details intentionally and avoid generic piles of unrelated holiday props.'
-  const result=composePrompt(state,{specialOccasion:occasion,birthdayAge:age,coordination:`special-occasion capsule for ${occasionLabel}. ${respect}`})
+  const result=composePrompt({...state,theme:state.occasionTheme || 'Celebration squad'},{specialOccasion:occasion,birthdayAge:age,coordination:`special-occasion capsule for ${occasionLabel}. ${respect}`})
   return {...result,title:`${occasionLabel} — ${result.product}`,direction:`An age-appropriate ${occasionLabel} apparel concept with original celebratory art direction and DTF-ready execution.`}
 }

@@ -1,4 +1,5 @@
 import { ageIntelligence } from '../data/ages.js'
+import { options } from '../data/options.js'
 
 export const ageProfiles = Object.fromEntries(Object.entries(ageIntelligence).map(([age,p]) => [age, `${p.body}, ${p.posture}, ${p.actions}, ${p.fashion}, ${p.accessories}, ${p.placement}, expressions appropriate to ${p.expressions}, and safe interaction limited to ${p.objects}`]))
 
@@ -19,14 +20,14 @@ export function ageDirection(age) {
 }
 
 const babyProducts = ['Bodysuit', 'Baby tee']
-const youthProducts = ['T-shirt','Raglan','Tank','Sweatshirt','Hoodie','Crewneck','Varsity jacket','Bomber jacket','Denim jacket','Dress','Skirt','Skort','Shorts','Joggers','Leggings','Jeans','Cargo pants','Romper','Overalls','Matching set','Tracksuit','Pajamas','Outerwear','Hat','Bag','Shoes']
+const youthProducts = options.product.filter((product) => !babyProducts.includes(product))
 
 const priorityRules = {
   Newborn: { products: ['Bodysuit'], pose: 'Supported restful pose', sizing: 'Baby-safe placement' },
   '0–3 Months': { products: babyProducts, pose: 'Supported restful pose', sizing: 'Baby-safe placement' },
   '3–6 Months': { products: babyProducts, pose: 'Supported seated pose', sizing: 'Baby-safe placement' },
   '6–12 Months': { products: [...babyProducts, 'T-shirt'], pose: 'Stable seated or crawling-friendly play pose', sizing: 'Baby-safe placement' },
-  Toddler: { products: ['T-shirt','Raglan','Sweatshirt','Hoodie','Crewneck','Denim jacket','Dress','Skirt','Skort','Shorts','Joggers','Leggings','Jeans','Cargo pants','Romper','Overalls','Matching set','Tracksuit','Pajamas','Outerwear','Hat','Bag','Shoes'], poses: ['Standing naturally', 'Dancing', 'Jumping', 'Walking with energy', 'Seated playfully', 'You Choose'], pose: 'Standing naturally', sizing: 'Toddler-proportioned placement' },
+  Toddler: { products: youthProducts, sizing: 'Toddler-proportioned placement' },
   'Little Kids': { products: youthProducts, sizingFallback: 'Standard youth fit' },
   'Big Kids': { products: youthProducts, sizingFallback: 'Standard youth fit' },
   Tweens: { products: youthProducts, sizingFallback: 'Relaxed youth fit' },

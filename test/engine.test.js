@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { defaults } from '../data/options.js'
+import { defaults, options } from '../data/options.js'
 import { composePrompt } from '../engine/promptComposer.js'
 import { shake } from '../engine/shakeLogic.js'
 import { buildMatchMini } from '../engine/matchMiniLogic.js'
@@ -14,6 +14,32 @@ import { garmentDirection } from '../data/garments.js'
 import { intelligentShake } from '../engine/shakeLogic.js'
 import { buildSpecialOccasion } from '../engine/specialOccasionLogic.js'
 import { readFile } from 'node:fs/promises'
+
+test('expanded dropdown libraries are duplicate-free and substantially broaden creative choice', () => {
+  const minimums = { product:50, theme:40, mascot:50, hairstyle:60, fashion:40, artStyle:60, pose:60, expression:20, typography:45, palette:35, composition:45, material:35, specialOccasion:65 }
+  for (const [key,values] of Object.entries(options)) {
+    if (!Array.isArray(values)) continue
+    assert.equal(new Set(values.map((value)=>value.trim().toLowerCase())).size,values.length,`${key} contains a duplicate`)
+  }
+  for (const [key,count] of Object.entries(minimums)) assert.ok(options[key].length >= count,`${key} should contain at least ${count} choices`)
+})
+
+test('expanded products all have placement intelligence and generated prompts honor new expression choices', () => {
+  for (const product of options.product) assert.ok(garmentDirection(product).zones.length,`${product} lacks garment placement intelligence`)
+  const result=composePrompt({...defaults,character:'Original human character',expression:'Curious wonder',pose:'Discovery pose',hairstyle:'Knotless braids',product:'Windbreaker'})
+  assert.match(result.prompt,/Expression: curious wonder/i)
+  assert.match(result.prompt,/Pose or action: discovery pose/i)
+  assert.match(result.prompt,/knotless braids/i)
+  assert.match(result.prompt,/Windbreaker/i)
+})
+
+test('Special Occasions uses only its dedicated celebration themes', () => {
+  assert.equal(options.occasionTheme.some((value)=>options.theme.includes(value)),false)
+  const result=buildSpecialOccasion({...defaults,theme:'Music makers',occasionTheme:'Graduation pride',specialOccasion:'High school graduation'})
+  assert.match(result.prompt,/concept “Graduation pride,”/i)
+  assert.doesNotMatch(result.prompt,/concept “Music makers,”/i)
+  assert.match(result.prompt,/Special occasion: High school graduation/i)
+})
 
 test('composer produces self-contained DTF direction and exact phrase', () => {
   const result = composePrompt({ ...defaults, phrase: 'CREATE Loud! 2026', phraseMode:'manual' })

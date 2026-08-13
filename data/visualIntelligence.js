@@ -37,7 +37,7 @@ export const paletteLibrary = {
   'Cool aqua and violet':['aqua','violet and blue','pink','black','silver'], 'Earthy modern colors':['terracotta','olive and sand','cobalt','charcoal','none'],
 }
 
-export function paletteDirection(name) { const [dominant='balanced color',support='coordinated support',accent='bright accent',neutral='grounding neutral',metallic='none'] = paletteLibrary[name] || []; return `dominant ${dominant}; support ${support}; accent ${accent}; neutral ${neutral}${metallic !== 'none' ? `; optional ${metallic} metallic simulation` : ''}` }
+export function paletteDirection(name) { const custom = paletteLibrary[name] || [name || 'balanced color','coordinated supporting tones','one controlled bright accent','a grounding neutral','none']; const [dominant,support,accent,neutral,metallic='none'] = custom; return `dominant ${dominant}; support ${support}; accent ${accent}; neutral ${neutral}${metallic !== 'none' ? `; optional ${metallic} metallic simulation` : ''}` }
 
 export const materialLibrary = {
   'Faux chenille':['looped yarn-like surface','soft stitched edge','medium raised depth','soft directional highlights','stitched patch cue','headline type or one focal motif'], 'Faux puff ink':['smooth inflated surface','rounded clean edge','low-medium raised depth','soft top highlight','expanded ink cue','headline or selected shapes'],
@@ -50,4 +50,4 @@ export const materialLibrary = {
   'Gel jelly effect':['translucent glossy surface','rounded edge','medium depth','wet specular highlight','gel patch cue','small focal accents'], None:['clean printed surface','clean edge','flat','matte','standard print cue','full graphic'],
 }
 
-export function materialDirection(name, production) { const [surface,edge,depth,light,construction,zones] = materialLibrary[name] || materialLibrary.None; return `${name}: ${surface}, ${edge}, ${depth}, ${light}, and ${construction}, confined to ${zones}; render as a ${production === 'DTF' ? 'flat DTF-safe visual simulation with printable separations' : 'sublimation-safe visual simulation integrated into the print'}, not a claim of real material` }
+export function materialDirection(name, production) { const fallback=[`a controlled ${String(name || 'printed').toLowerCase()} visual surface`,'clean isolated edges','print-simulated depth','controlled highlights','clearly simulated construction','one focal zone or selected accents']; const [surface,edge,depth,light,construction,zones] = materialLibrary[name] || fallback; return `${name}: ${surface}, ${edge}, ${depth}, ${light}, and ${construction}, confined to ${zones}; render as a ${production === 'DTF' ? 'flat DTF-safe visual simulation with printable separations' : 'sublimation-safe visual simulation integrated into the print'}, not a claim of real material` }

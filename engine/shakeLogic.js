@@ -4,7 +4,7 @@ import { resolveCompatibility } from './compatibility.js'
 import { noveltyScore, remember } from './originality.js'
 import { themePhrase } from './phraseLogic.js'
 
-const keys = ['age','product','theme','mood','character','mascot','ethnicity','hairstyle','fashion','artStyle','pose','typography','palette','composition','material','production','sizing','intensity']
+const keys = ['age','product','theme','mood','character','mascot','ethnicity','hairstyle','expression','fashion','artStyle','pose','typography','palette','composition','material','production','sizing','intensity']
 const replacementKeys = new Set(['artStyle','typography','composition'])
 const pick = (list) => list[Math.floor(Math.random() * list.length)]
 const visualTwists = ['unexpected scale shift','controlled negative-space reveal','single motif transformed across type','inside-out color hierarchy','rhythmic panel-to-graphic echo','foreground/background type exchange','surreal-but-safe visual metaphor','dramatic type architecture','bold asymmetrical crop','layered graphic planes with clean occlusion','repeating visual cadence','character-to-type interaction','expressive framing with unusual negative space','fashion-poster silhouette system']

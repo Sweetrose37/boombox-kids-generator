@@ -1,6 +1,6 @@
 import { ageDirection, resolveAgePriorities } from './ageLogic.js'
 import { resolveCompatibility } from './compatibility.js'
-import { hairLibrary, humanDiversity, isHumanCharacter, isMascotCharacter, mascotLibrary } from '../data/characters.js'
+import { hairDirection, humanDiversity, isHumanCharacter, isMascotCharacter, mascotDirection } from '../data/characters.js'
 import { fashionDirection } from '../data/fashion.js'
 import { artStyleLibrary, compositionLibrary, materialDirection, paletteDirection, typographyLibrary } from '../data/visualIntelligence.js'
 import { intensityDirection } from './intensity.js'
@@ -19,15 +19,21 @@ export function composePrompt(input, context = {}) {
   const phrase = resolvePhrase(s,context)
   const character = clean(s.character, 'an original inclusive character direction selected creatively without assuming identity traits')
   const diversitySeed = [...`${s.theme}${s.phrase}${s.age}`].reduce((sum,char) => sum + char.charCodeAt(0),0)
-  const hair = isHumanCharacter(s.character) && hairLibrary[s.hairstyle] ? ` Hair direction: ${hairLibrary[s.hairstyle]}, without inferring identity or culture.` : ''
-  const diversity = isHumanCharacter(s.character) && (!s.skinTone || s.skinTone === 'Not specified') ? ` Inclusive character variation for this concept: ${choose(humanDiversity.skinTones,diversitySeed)} skin with a ${choose(humanDiversity.undertones,diversitySeed,1)} undertone, ${choose(humanDiversity.facialStructures,diversitySeed,2)} facial structure, ${choose(humanDiversity.bodyBuilds,diversitySeed,3)} age-appropriate build, ${choose(humanDiversity.expressions,diversitySeed,4)} expression, and ${choose(humanDiversity.energies,diversitySeed,5)} personality energy. These independent visual choices describe no race, ethnicity, nationality, culture, religion, or gender and must not be used to infer one another.` : ''
+  const selectedHair = hairDirection(s.hairstyle)
+  const hair = isHumanCharacter(s.character) && selectedHair ? ` Hair direction: ${selectedHair}, without inferring identity or culture.` : ''
+  const diversity = isHumanCharacter(s.character) && (!s.skinTone || s.skinTone === 'Not specified') ? ` Inclusive character variation for this concept: ${choose(humanDiversity.skinTones,diversitySeed)} skin with a ${choose(humanDiversity.undertones,diversitySeed,1)} undertone, ${choose(humanDiversity.facialStructures,diversitySeed,2)} facial structure, ${choose(humanDiversity.bodyBuilds,diversitySeed,3)} age-appropriate build, and ${choose(humanDiversity.energies,diversitySeed,5)} personality energy. These independent visual choices describe no race, ethnicity, nationality, culture, religion, or gender and must not be used to infer one another.` : ''
   const ethnicityValue = s.ethnicity === 'Custom' ? String(s.customCulturalBackground || '').trim() : s.ethnicity
   const ethnicity = isHumanCharacter(s.character) && ethnicityValue && ethnicityValue !== 'Not specified'
     ? ethnicityValue === 'Surprise Me'
       ? ' Ethnicity / cultural background: Surprise Me. Let the image generator make this creative decision without stereotypes and without deriving any other appearance or styling trait from it.'
       : ` Ethnicity / cultural background: ${ethnicityValue}. Treat this only as the explicitly selected identity context; do not stereotype it or derive skin tone, hair texture, hairstyle, facial features, body type, fashion, pose, accessories, or cultural clothing from it.`
     : ''
-  const mascot = isMascotCharacter(s.character) ? ` Use ${mascotLibrary[s.mascot] || mascotLibrary.Bear}; preserve the selected theme and energy, keep its silhouette readable at apparel scale, reinterpret clothing anatomically for the creature, and do not apply human hairstyle instructions.` : ''
+  const mascot = isMascotCharacter(s.character) ? ` Use ${mascotDirection(s.mascot)}; preserve the selected theme and energy, keep its silhouette readable at apparel scale, reinterpret clothing anatomically for the creature, and do not apply human hairstyle instructions.` : ''
+  const expression = s.character === 'No character'
+    ? 'not applicable because no character is present'
+    : !s.expression || s.expression === 'Not specified'
+      ? 'not specified; do not invent a specific facial expression'
+      : clean(s.expression, 'a natural age-appropriate expression')
   const production = 'Mandatory DTF final deliverable: output one high-resolution isolated print graphic on a genuinely transparent background with a cohesive silhouette, clean printable edges, strong contrast, substantial important lines, controlled micro-detail, grouped decorative elements, intentional negative space, and exact readable typography. Show the artwork itself only—not a garment mockup, model, child wearing the garment, mannequin, hanger, folded shirt, product photo, room, wall, floor, frame, border, backdrop, lighting scene, drop shadow outside the artwork, or checkerboard transparency preview. Keep all pixels outside the intended print artwork fully transparent and provide no separate presentation text.'
   const type = phrase
     ? `Use ${typographyLibrary[s.typography] || clean(s.typography, 'original readable display lettering').toLowerCase()} and reproduce the exact phrase “${phrase}” with identical spelling, punctuation, capitalization, and word order. This is the only text: add no secondary slogans, prop text, garment labels, logos, or pseudo-text.`
@@ -45,7 +51,7 @@ export function composePrompt(input, context = {}) {
     occasion,
     `Developmental appropriateness for ${s.age || 'Toddler'}: use ${ageDirection(s.age)}. Never make the child appear younger, older, or adult. Developmental rules may alter how an idea is depicted but must not erase what makes it creative.`,
     `Design the isolated artwork for application to a ${s.product || 'T-shirt'} with ${clean(s.sizing, 'age-appropriate youth fit').toLowerCase()} and respect its structurally believable printable area; do not render the garment itself.${placementText}`,
-    `Character direction: ${character.toLowerCase()}.${mascot}${ethnicity}${diversity} Pose or action: ${clean(s.pose, 'a natural age-appropriate action').toLowerCase()}.${hair} Do not assume gender, race, ethnicity, nationality, skin tone, hair texture, culture, religion, or family structure; honor only traits explicitly supplied and avoid stereotypes or tokenism.`,
+    `Character direction: ${character.toLowerCase()}.${mascot}${ethnicity}${diversity} Expression: ${expression.toLowerCase()}. Pose or action: ${clean(s.pose, 'a natural age-appropriate action').toLowerCase()}.${hair} Do not assume gender, race, ethnicity, nationality, skin tone, hair texture, culture, religion, or family structure; honor only traits explicitly supplied and avoid stereotypes or tokenism.`,
     `Fashion direction: ${fashionDirection(s.fashion)}; keep it wearable, brand-free, age-appropriate, visually interesting, and free of recognizable commercial logos, branded footwear or bags, and trademarked fashion identifiers.${coordination}`,
     `Composition: ${compositionLibrary[s.composition] || clean(s.composition, 'clear balanced composition').toLowerCase()}. Art style: ${artStyleLibrary[s.artStyle] || clean(s.artStyle, 'polished original illustration').toLowerCase()}. Keep the focal hierarchy clear and readable at garment distance.${twist}`,
     `Creative intensity — ${s.intensity || 'PLAYFUL'}: ${intensityDirection(s.intensity, s.age)}`,
