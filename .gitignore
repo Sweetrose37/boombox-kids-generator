@@ -1,0 +1,5 @@
+.phase2-server.log
+.phase2-server.err.log
+node_modules/
+.DS_Store
+Thumbs.db

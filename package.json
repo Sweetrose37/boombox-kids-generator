@@ -1,0 +1,11 @@
+{
+  "name": "boombox-kids-prompt-studio",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node dev-server.js",
+    "test": "node --test",
+    "check": "node --check app.js && node --check dev-server.js && node --check ui/workspace.js && node --check state/session.js && node --check data/ages.js && node --check data/characters.js && node --check data/fashion.js && node --check data/garments.js && node --check data/visualIntelligence.js && node --check engine/ageLogic.js && node --check engine/compatibility.js && node --check engine/intensity.js && node --check engine/originality.js && node --check engine/promptComposer.js && node --check engine/shakeLogic.js && node --check engine/matchMiniLogic.js && node --check engine/outfitLogic.js && node --check engine/collectionLogic.js && node --check engine/remixLogic.js && node --check production/sizing.js && node --check production/guidance.js && node --check workspace/schema.js && node --check workspace/repository.js && node --check workspace/query.js && node --check workspace/export.js"
+  }
+}

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050507" />
+    <title>BOOMBOX KIDS™ Prompt Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="studio-shell">
+      <div class="paint-noise" aria-hidden="true"></div>
+
+      <header class="hero">
+        <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+
+        <aside class="menu-drawer" aria-hidden="true">
+          <strong>STUDIO MENU</strong>
+          <button type="button" data-menu-home>Home</button>
+          <button type="button" data-menu-saved>Saved Prompts</button>
+          <button type="button" data-open-guide>Quick Guide</button>
+          <button type="button" data-start-fresh>Start Fresh</button>
+        </aside>
+
+        <section class="mascot-stage" aria-label="BooBoo mascot">
+          <span class="signal signal-one" aria-hidden="true"></span>
+          <span class="signal signal-two" aria-hidden="true"></span>
+          <img src="assets/booboo-mascot.png" alt="BooBoo, the BOOMBOX KIDS bear mascot, wearing headphones and holding a boombox" />
+        </section>
+
+        <section class="brand-lockup" aria-labelledby="page-title">
+          <span class="crown" aria-hidden="true">♛</span>
+          <h1 id="page-title" aria-label="BOOMBOX KIDS">
+            <span>B</span><span>O</span><span>O</span><span>M</span><span>B</span><span>O</span><span>X</span>
+          </h1>
+          <div class="kids-ribbon">KIDS<sup>™</sup></div>
+          <div class="studio-stroke">PROMPT STUDIO</div>
+          <p><b>BUILD.</b> <b>CREATE.</b> <b>DESIGN.</b> ROCK YOUR IMAGINATION.</p>
+        </section>
+
+        <section class="creator-panel">
+          <div class="creativity-card">
+            <span class="bulb" aria-hidden="true">♧</span>
+            <div><strong>YOUR CREATIVITY.</strong><b>OUR BEAT.</b><p>Production-ready prompts<br />for kids apparel &amp; accessories.</p></div>
+          </div>
+          <div class="profile-card">
+            <div><span>WELCOME BACK!</span><strong>♛ &nbsp; Creative Boss</strong></div>
+            <img src="assets/booboo-mascot.png" alt="" />
+          </div>
+        </section>
+      </header>
+
+      <section class="mode-grid" aria-label="Creative modes">
+        <button class="mode-card mode-cyan" data-mode="Build with BooBoo" type="button">
+          <span class="mode-scribble">✦</span><h2>BUILD<br /><small>WITH</small> BOOBOO</h2><div class="mode-art">♕</div>
+          <footer><span>Step-by-step prompt builder with BooBoo as your guide.</span><b aria-hidden="true">→</b></footer>
+        </button>
+        <button class="mode-card mode-pink" data-mode="Shake the Box" type="button">
+          <span class="mode-scribble">⚡</span><h2>SHAKE<br />THE BOX</h2><div class="mode-art">▤</div>
+          <footer><span>Shake it up! Get a wild surprise prompt in seconds.</span><b aria-hidden="true">→</b></footer>
+        </button>
+        <button class="mode-card mode-purple" data-mode="Match My Mini" type="button">
+          <span class="mode-scribble">♡</span><h2>MATCH<br />MY MINI<sup>™</sup></h2><div class="mode-art shirts">♕ + ♕</div>
+          <footer><span>Create matching looks for siblings, twins, or the whole crew.</span><b aria-hidden="true">→</b></footer>
+        </button>
+        <button class="mode-card mode-yellow" data-mode="Outfit Builder" type="button">
+          <span class="mode-scribble">♨</span><h2>OUTFIT<br />BUILDER</h2><div class="mode-art">♜ + ♟</div>
+          <footer><span>Build full looks: tops, bottoms, sets, jackets, and more.</span><b aria-hidden="true">→</b></footer>
+        </button>
+        <button class="mode-card mode-cyan" data-mode="Collection Builder" type="button">
+          <span class="mode-scribble">✧</span><h2>COLLECTION<br />BUILDER</h2><div class="mode-art shirts">♕ ♕ ♕</div>
+          <footer><span>Create coordinated collections that tell a story.</span><b aria-hidden="true">→</b></footer>
+        </button>
+        <button class="mode-card mode-pink" data-mode="Remix My Prompt" type="button">
+          <span class="mode-scribble">✣</span><h2>REMIX<br /><small>MY PROMPT</small></h2><div class="mode-art remix">⟳</div>
+          <footer><span>Take an existing prompt and remix it into something new.</span><b aria-hidden="true">→</b></footer>
+        </button>
+      </section>
+
+      <nav class="quick-build" aria-label="Quick build controls">
+        <div class="quick-title"><strong>QUICK BUILD<br />CONTROLS</strong><span>Tap a category to jump in fast!</span></div>
+        <button type="button" data-control="Age Group"><i>♙♙</i><span>AGE GROUP</span></button>
+        <button type="button" data-control="Product"><i>♕</i><span>PRODUCT</span></button>
+        <button type="button" data-control="Art Style"><i>✎</i><span>ART STYLE</span></button>
+        <button type="button" data-control="Character"><i>●</i><span>CHARACTER</span></button>
+        <button type="button" data-control="Typography"><i>Aa</i><span>TYPOGRAPHY</span></button>
+        <button type="button" data-control="Colors"><i>◉</i><span>COLORS</span></button>
+        <button type="button" data-control="Faux Materials"><i>◇</i><span>FAUX MATERIALS</span></button>
+        <button type="button" data-control="DTF / Sublimation"><i>▱</i><span>DTF / SUBLIMATION</span></button>
+        <button type="button" data-control="Sizing & Fit"><i>◌</i><span>SIZING &amp; FIT</span></button>
+      </nav>
+
+      <section class="status-rail" aria-label="Studio status">
+        <div class="now-playing"><span class="wave" aria-hidden="true">▮▯▮▯▮</span><p><small>NOW PLAYING</small><strong id="now-playing">Creative Mode</strong></p><button type="button" aria-label="Play creative mode">▶</button><button type="button" aria-label="Next creative mode">▸|</button></div>
+        <div class="vibes"><small>TODAY'S CREATIVE VIBES</small><p>Bold ideas. Original designs. Limitless possibilities.</p><span>♛</span></div>
+        <button class="saved-prompts" type="button"><span><small>SAVED PROMPTS</small><strong>12</strong></span><b>♥</b></button>
+        <div class="original-sticker">BE ORIGINAL.<br />BE BOOMBOX.</div>
+      </section>
+
+      <section class="builder-workspace" id="builder-workspace" aria-hidden="true" aria-labelledby="workspace-title">
+        <div class="workspace-scrim" data-close-workspace></div>
+        <div class="workspace-console" role="dialog" aria-modal="true">
+          <header class="workspace-header">
+            <div><small>NOW BUILDING</small><h2 id="workspace-title">BUILD WITH BOOBOO</h2></div>
+            <button type="button" data-close-workspace aria-label="Close prompt builder">×</button>
+          </header>
+          <div class="workspace-body" id="workspace-body"></div>
+        </div>
+      </section>
+
+      <section class="saved-library" id="saved-library" aria-hidden="true" aria-labelledby="saved-title">
+        <div class="workspace-scrim" data-close-saved></div>
+        <div class="saved-console" role="dialog" aria-modal="true">
+          <header class="workspace-header"><div><small>LOCAL STUDIO TAPES</small><h2 id="saved-title">SAVED PROMPTS</h2></div><button type="button" data-close-saved aria-label="Close saved prompts">×</button></header>
+          <div id="saved-list" class="saved-list"></div>
+        </div>
+      </section>
+
+      <section class="phase6-overlay" id="quick-guide" aria-hidden="true" aria-labelledby="guide-title">
+        <div class="workspace-scrim" data-close-guide></div><div class="phase6-dialog" role="dialog" aria-modal="true"><button class="phase6-close" type="button" data-close-guide aria-label="Close Quick Guide">×</button><small>HELP CENTER</small><h2 id="guide-title">QUICK GUIDE</h2><p>BOOMBOX KIDS™ creates production-minded prompts. The finished product here is the prompt—not an image.</p><div class="guide-grid"><article><b>BUILD WITH BOOBOO</b><span>Guided prompt building.</span></article><article><b>SHAKE THE BOX</b><span>Compatible surprise combinations.</span></article><article><b>MATCH MY MINI™</b><span>Coordinated, non-identical designs.</span></article><article><b>OUTFIT BUILDER</b><span>Multi-garment prompt direction.</span></article><article><b>COLLECTION BUILDER</b><span>A family of related prompts.</span></article><article><b>REMIX MY PROMPT</b><span>Transform an idea while preserving its core.</span></article></div><h3>CREATIVE INTENSITY</h3><p><b>PLAYFUL</b> colorful and lively · <b>POPPIN’</b> more contrast and motion · <b>BOLD</b> stronger hierarchy · <b>EXTRA</b> layered statement energy · <b>BOOMBOX MODE</b> maximum age-appropriate creative volume.</p><button type="button" data-guide-create>START CREATING</button></div>
+      </section>
+
+      <section class="phase6-overlay" id="first-visit" aria-hidden="true" aria-labelledby="welcome-title">
+        <div class="workspace-scrim" data-skip-intro></div><div class="phase6-dialog welcome-dialog" role="dialog" aria-modal="true"><small>WELCOME TO</small><h2 id="welcome-title">BOOMBOX KIDS™<br> PROMPT STUDIO</h2><p>Build original production-minded prompts for kids apparel, outfits, accessories, and coordinated collections.</p><strong>THE FINISHED PRODUCT IS THE PROMPT.</strong><div><button type="button" data-intro-start>START CREATING</button><button type="button" data-intro-guide>QUICK GUIDE</button><button type="button" data-skip-intro>SKIP</button></div></div>
+      </section>
+
+      <section class="phase6-overlay" id="draft-found" aria-hidden="true" aria-labelledby="draft-title">
+        <div class="workspace-scrim"></div><div class="phase6-dialog" role="dialog" aria-modal="true"><small>DRAFT FOUND</small><h2 id="draft-title">YOU LEFT A BEAT UNFINISHED.</h2><p>Your working choices are still here. Continue from where you stopped or clear only this draft.</p><div><button type="button" data-continue-draft>CONTINUE BUILDING</button><button type="button" data-fresh-draft>START FRESH</button></div></div>
+      </section>
+
+      <footer class="site-footer">
+        <strong>© BOOMBOX KIDS™</strong>
+        <span>♛ &nbsp; Original Designs Only</span><i></i>
+        <span>ϟ &nbsp; DTF &amp; Sublimation Ready</span><i></i>
+        <span>♥ &nbsp; Made for Kids. Designed for Creators.</span>
+        <button type="button" data-open-guide>HELP CENTER &nbsp; ?</button>
+      </footer>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
