@@ -18,7 +18,8 @@ export function normalizeDraft(raw) {
   if(!options.age.includes(raw.state.age)||!options.product.includes(raw.state.product))return null
   const step=Number(raw.step)
   if(!Number.isInteger(step)||step<0||step>30)return null
-  return {version:1,mode:raw.mode,step,state:{...defaults,...raw.state},updatedAt:typeof raw.updatedAt==='string'?raw.updatedAt:new Date().toISOString()}
+  const state={...defaults,...raw.state};if(!raw.state.phraseMode){const phrase=String(state.phrase||'').trim();if(phrase.toUpperCase()==='CREATE LOUD'){state.phrase='';state.phraseMode='auto'}else state.phraseMode=phrase?'manual':'auto'}
+  return {version:1,mode:raw.mode,step,state,updatedAt:typeof raw.updatedAt==='string'?raw.updatedAt:new Date().toISOString()}
 }
 export const loadDraft=(storage=globalThis.localStorage)=>normalizeDraft(read(storage,DRAFT_KEY))
 export const saveDraft=(draft,storage=globalThis.localStorage)=>{const value=normalizeDraft({...draft,updatedAt:new Date().toISOString()});if(value)storage?.setItem(DRAFT_KEY,JSON.stringify(value));return value}

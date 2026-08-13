@@ -16,13 +16,22 @@ import { clearDraft, completeIntro, exportSession, importSession, introComplete,
 class MemoryStorage { constructor(){this.map=new Map()}getItem(key){return this.map.has(key)?this.map.get(key):null}setItem(key,value){this.map.set(key,String(value))}removeItem(key){this.map.delete(key)} }
 
 test('Phase 6 session draft validates, restores, and clears independently',()=>{
-  const storage=new MemoryStorage(),draft={mode:'Build with BooBoo',step:5,state:{...defaults,age:'Tweens',phrase:'EXACT BEAT'}}
+  const storage=new MemoryStorage(),draft={mode:'Build with BooBoo',step:5,state:{...defaults,age:'Tweens',phrase:'EXACT BEAT',phraseMode:'manual'}}
   saveDraft(draft,storage)
   assert.equal(loadDraft(storage).step,5)
   assert.equal(loadDraft(storage).state.phrase,'EXACT BEAT')
+  assert.equal(loadDraft(storage).state.phraseMode,'manual')
   storage.setItem('boombox-kids-phase6-draft','{"mode":"broken"}')
   assert.equal(loadDraft(storage),null)
   saveDraft(draft,storage);clearDraft(storage);assert.equal(loadDraft(storage),null)
+})
+
+test('legacy drafts migrate CREATE LOUD to automatic wording and preserve custom phrases',()=>{
+  const storage=new MemoryStorage()
+  storage.setItem('boombox-kids-phase6-draft',JSON.stringify({mode:'Build with BooBoo',step:5,state:{...defaults,phrase:'CREATE LOUD',phraseMode:undefined}}))
+  assert.equal(loadDraft(storage).state.phraseMode,'auto');assert.equal(loadDraft(storage).state.phrase,'')
+  storage.setItem('boombox-kids-phase6-draft',JSON.stringify({mode:'Build with BooBoo',step:5,state:{...defaults,phrase:'MY LEGACY WORDS',phraseMode:undefined}}))
+  assert.equal(loadDraft(storage).state.phraseMode,'manual');assert.equal(loadDraft(storage).state.phrase,'MY LEGACY WORDS')
 })
 
 test('preferences and intro state are local, normalized, and backup-compatible',()=>{
@@ -35,7 +44,7 @@ test('preferences and intro state are local, normalized, and backup-compatible',
 })
 
 test('all six modes produce compatible prompt output architecture',()=>{
-  const state={...defaults,phrase:'KEEP THIS EXACT'}
+  const state={...defaults,phrase:'KEEP THIS EXACT',phraseMode:'manual'}
   const shaken=intelligentShake(state,new Set(['phrase']),[])
   const outputs=[composePrompt(state),composePrompt(shaken),buildMatchMini(state),buildOutfit(state),buildCollection({...state,collectionCount:'4'}),remixPrompt(composePrompt(state).prompt,['Stronger concept'])]
   outputs.forEach((item)=>{assert.equal(typeof item.title,'string');assert.equal(typeof item.direction,'string');assert.equal(typeof item.prompt,'string');assert.ok(item.age);assert.ok(item.product);assert.ok(item.production)})
@@ -43,8 +52,17 @@ test('all six modes produce compatible prompt output architecture',()=>{
 
 test('coordinated sets and collections preserve exact phrases in every item',()=>{
   const phrase='Keep My EXACT 2026!'
-  for(const output of [buildMatchMini({...defaults,phrase}),buildCollection({...defaults,phrase,collectionCount:'4'}),buildOutfit({...defaults,phrase})]) {
+  for(const output of [buildMatchMini({...defaults,phrase,phraseMode:'manual'}),buildCollection({...defaults,phrase,phraseMode:'manual',collectionCount:'4'}),buildOutfit({...defaults,phrase,phraseMode:'manual'})]) {
     output.items.forEach((item)=>assert.match(item.prompt,new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'))))
+  }
+})
+
+test('automatic phrases vary throughout Match My Mini Outfit and Collection modes',()=>{
+  for(const output of [buildMatchMini(defaults),buildOutfit(defaults),buildCollection({...defaults,collectionCount:'6'})]){
+    const phrases=output.items.map((item)=>item.exactPhrase).filter(Boolean)
+    assert.equal(phrases.length,output.items.length)
+    assert.ok(new Set(phrases).size>1)
+    phrases.forEach((phrase)=>assert.notEqual(phrase,'CREATE LOUD'))
   }
 })
 
@@ -58,7 +76,7 @@ test('age conflicts translate across intensity and fashion cases',()=>{
 })
 
 test('character compatibility suppresses human hair without losing phrase',()=>{
-  const state={...defaults,character:'Original animal mascot',hairstyle:'Braids',phrase:'MY EXACT WORDS'}
+  const state={...defaults,character:'Original animal mascot',hairstyle:'Braids',phrase:'MY EXACT WORDS',phraseMode:'manual'}
   const resolved=resolveCompatibility(state)
   assert.equal(resolved.selections.hairstyle,'Not specified')
   assert.equal(resolved.selections.phrase,'MY EXACT WORDS')
@@ -66,7 +84,7 @@ test('character compatibility suppresses human hair without losing phrase',()=>{
 })
 
 test('full mode outputs save as independent prompts and groups without overwrites',()=>{
-  const storage=new MemoryStorage(),repository=new WorkspaceRepository(storage),state={...defaults,phrase:'ORIGINAL EXACT'}
+  const storage=new MemoryStorage(),repository=new WorkspaceRepository(storage),state={...defaults,phrase:'ORIGINAL EXACT',phraseMode:'manual'}
   const match=repository.saveOutput(buildMatchMini(state),state,'Match My Mini')
   const outfit=repository.saveOutput(buildOutfit(state),state,'Outfit Builder')
   const collection=repository.saveOutput(buildCollection({...state,collectionCount:'4'}),state,'Collection Builder')

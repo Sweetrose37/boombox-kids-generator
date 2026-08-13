@@ -15,7 +15,7 @@ import { intelligentShake } from '../engine/shakeLogic.js'
 import { readFile } from 'node:fs/promises'
 
 test('composer produces self-contained DTF direction and exact phrase', () => {
-  const result = composePrompt({ ...defaults, phrase: 'CREATE Loud! 2026' })
+  const result = composePrompt({ ...defaults, phrase: 'CREATE Loud! 2026', phraseMode:'manual' })
   assert.match(result.prompt, /^Generate the image now/i)
   assert.match(result.prompt, /Do not rewrite, summarize, simplify, reinterpret/i)
   assert.match(result.prompt, /“CREATE Loud! 2026”/)
@@ -28,6 +28,22 @@ test('remix prompts tell ChatGPT to create the image without rewriting the promp
   const result = remixPrompt('Keep this exact concept.', [])
   assert.match(result.prompt, /^Generate the image now/i)
   assert.match(result.prompt, /Do not return a revised prompt/i)
+})
+
+test('automatic typography phrase matches each selected theme instead of using CREATE LOUD', () => {
+  const music=composePrompt({...defaults,theme:'Music makers'}),adventure=composePrompt({...defaults,theme:'Adventure squad'})
+  assert.ok(music.exactPhrase)
+  assert.ok(adventure.exactPhrase)
+  assert.notEqual(music.exactPhrase,adventure.exactPhrase)
+  assert.doesNotMatch(music.prompt,/“CREATE LOUD”/i)
+  assert.match(music.prompt,new RegExp(`“${music.exactPhrase}”`))
+  assert.match(adventure.prompt,new RegExp(`“${adventure.exactPhrase}”`))
+})
+
+test('manual exact typography overrides automatic theme phrases everywhere', () => {
+  const result=composePrompt({...defaults,theme:'Cosmic playground',phrase:'MY EXACT WORDS',phraseMode:'manual'})
+  assert.equal(result.exactPhrase,'MY EXACT WORDS')
+  assert.match(result.prompt,/“MY EXACT WORDS”/)
 })
 
 test('age logic materially changes developmental direction', () => {
@@ -195,7 +211,7 @@ test('DTF resolves incompatible all-over composition', () => {
 })
 
 test('text and unrequested-element purity guardrails are explicit', () => {
-  const prompt = composePrompt({ ...defaults, phrase:'ONLY THIS!' }).prompt
+  const prompt = composePrompt({ ...defaults, phrase:'ONLY THIS!', phraseMode:'manual' }).prompt
   assert.match(prompt,/This is the only text/i)
   assert.match(prompt,/add no crowns, stars, hearts/i)
   assert.match(prompt,/“ONLY THIS!”/)
@@ -228,6 +244,11 @@ test('every Shake replaces unlocked art style typography and composition', () =>
     assert.notEqual(next.composition,current.composition)
     current = next
   }
+})
+
+test('every Shake creates standalone theme-matched wording without CREATE LOUD', () => {
+  let current={...defaults}
+  for(let index=0;index<20;index+=1){const next=shake(current,new Set(),new Set());assert.ok(next.phrase);assert.notEqual(next.phrase,current.phrase);assert.notEqual(next.phrase,'CREATE LOUD');assert.equal(next.phraseMode,'auto');current=next}
 })
 
 test('Shake never disposes locked art style typography or composition', () => {

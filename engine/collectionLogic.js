@@ -19,7 +19,7 @@ export function buildCollection(state) {
       phrase: state.phrase,
       intensity: intensityProgression[index % intensityProgression.length],
     }
-    return {...composePrompt(variation, { coordination: `collection piece ${index + 1} of ${count}; preserve shared ${state.theme} creative DNA and palette family while varying focal strategy, visual density, typography behavior, silhouette, scale, material placement, crop, pattern, rhythm, and negative space` }),title:`${state.theme} — Collection Piece ${index+1}`,settings:variation}
+    return {...composePrompt(variation, { phraseIndex:index, coordination: `collection piece ${index + 1} of ${count}; preserve shared ${state.theme} creative DNA and palette family while varying focal strategy, visual density, typography behavior, silhouette, scale, material placement, crop, pattern, rhythm, and negative space` }),title:`${state.theme} — Collection Piece ${index+1}`,settings:variation}
   })
   return { title: `${count}-Piece ${state.theme} Collection`, direction: 'A varied kids-apparel capsule with shared creative DNA—not recolors of one repeated design.', prompt: prompts.map((item, index) => `COLLECTION PROMPT ${index + 1}: ${item.prompt}`).join('\n\n'), production: state.production, age: state.age, product: `${count}-piece collection`,items:prompts }
 }

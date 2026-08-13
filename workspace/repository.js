@@ -12,7 +12,7 @@ export class WorkspaceRepository {
   findPrompt(id) { return this.data.prompts.find((item)=>item.id===id) }
   createPrompt(output,state={},mode='Build with BooBoo',extra={}) {
     const prompt = normalizePrompt({ title:output.title, designConcept:output.direction, prompt:output.prompt, age:output.age, product:output.product, production:output.production,
-      intensity:state.intensity, artStyle:state.artStyle, character:state.character, mascot:state.mascot, ethnicity:state.ethnicity, customCulturalBackground:state.customCulturalBackground, typography:state.typography, palette:state.palette, material:state.material, exactPhrase:state.phrase,
+      intensity:state.intensity, artStyle:state.artStyle, character:state.character, mascot:state.mascot, ethnicity:state.ethnicity, customCulturalBackground:state.customCulturalBackground, typography:state.typography, palette:state.palette, material:state.material, exactPhrase:output.exactPhrase || state.phrase,
       creationMode:mode, sourcePromptId:state.remixSourceId || '', settings:clone(state), ...extra })
     const duplicate=this.data.prompts.find((item)=>item.prompt===prompt.prompt && item.creationMode===prompt.creationMode)
     if (duplicate) { this.recent(duplicate.id); this.persist(); return { record:duplicate, created:false } }

@@ -27,7 +27,7 @@ export const options = {
 export const defaults = {
   age: 'Toddler', product: 'T-shirt', theme: 'Music makers', mood: 'Playful', character: 'Original animal mascot', mascot: 'Bear',
   ethnicity: 'Not specified', customCulturalBackground: '', hairstyle: 'Not specified', fashion: 'Original streetwear', artStyle: 'Graffiti pop', pose: 'Dancing',
-  typography: 'Playful bubble type', phrase: 'CREATE LOUD', palette: 'Neon cyan, pink, purple, and yellow',
+  typography: 'Playful bubble type', phrase: '', phraseMode: 'auto', palette: 'Neon cyan, pink, purple, and yellow',
   composition: 'Centered hero graphic', material: 'Faux chenille', production: 'DTF', sizing: 'Toddler-proportioned placement',
   outfit: 'Hoodie + joggers', placement: 'Front + sleeve accent', relationship: 'Coordinated set', collectionCount: '4', coordination: 'Optional coordinated accessories', intensity: 'PLAYFUL',
 }
@@ -35,7 +35,7 @@ export const defaults = {
 export const guidedSteps = [
   ['age', 'AGE / DEVELOPMENT'], ['product', 'GARMENT / PRODUCT'], ['theme', 'THEME'], ['mood', 'DESIGN MOOD'],
   ['character', 'CHARACTER DIRECTION'], ['ethnicity', 'ETHNICITY / CULTURAL BACKGROUND'], ['hairstyle', 'HAIRSTYLE'], ['fashion', 'FASHION DIRECTION'], ['artStyle', 'ART STYLE'],
-  ['pose', 'POSE / ACTION'], ['typography', 'TYPOGRAPHY'], ['phrase', 'EXACT PHRASE'], ['palette', 'COLOR PALETTE'],
+  ['pose', 'POSE / ACTION'], ['typography', 'TYPOGRAPHY'], ['phrase', 'EXACT PHRASE (OPTIONAL — AUTO-MATCHED IF BLANK)'], ['palette', 'COLOR PALETTE'],
   ['composition', 'COMPOSITION'], ['material', 'FAUX MATERIAL / EFFECT'], ['production', 'PRINT METHOD'], ['intensity', 'CREATIVE INTENSITY'], ['coordination', 'OUTFIT COORDINATION'],
 ]
 

@@ -52,7 +52,7 @@ export function initWorkspace() {
   const open = () => { overlay.classList.add('is-open'); overlay.setAttribute('aria-hidden','false'); document.body.classList.add('dialog-open') }
   const close = () => { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden','true'); document.body.classList.remove('dialog-open') }
   const closeSaved = () => { savedOverlay.classList.remove('is-open'); savedOverlay.setAttribute('aria-hidden','true'); document.body.classList.remove('dialog-open') }
-  const updateFields = () => body.querySelectorAll('[data-field]').forEach((input) => input.addEventListener('change', () => { state[input.dataset.field] = input.value; persist(); if (['character','ethnicity'].includes(input.dataset.field)) render() }))
+  const updateFields = () => body.querySelectorAll('[data-field]').forEach((input) => input.addEventListener('change', () => { state[input.dataset.field] = input.value;if(input.dataset.field==='phrase')state.phraseMode=input.value.trim()?'manual':'auto';persist(); if (['character','ethnicity'].includes(input.dataset.field)) render() }))
 
   function outputMarkup(result) {
     const resolutionNote = result.resolutions?.length ? `<p class="age-resolution-note"><strong>AGE PRIORITY APPLIED:</strong> ${result.resolutions.map((item) => `${escapeHtml(item.field)} adjusted to ${escapeHtml(item.to)}`).join(' • ')}</p>` : ''
@@ -96,8 +96,8 @@ export function initWorkspace() {
     const resetStep=document.createElement('button');resetStep.type='button';resetStep.textContent='RESET STEP';resetStep.dataset.resetStep='';body.querySelector('[data-next]').before(resetStep)
     body.querySelector('[data-back]').addEventListener('click', () => { step -= 1;persist();render() })
     resetStep.addEventListener('click',()=>{state[key]=defaults[key];if(key==='ethnicity')state.customCulturalBackground='';persist();render()})
-    body.querySelector('[data-you-choose]')?.addEventListener('click', () => { state[key] = key === 'phrase' || key === 'coordination' ? '' : 'You Choose'; persist(); render() })
-    body.querySelector('[data-surprise]')?.addEventListener('click', () => { state[key] = options[key] ? options[key].filter((v) => v !== 'You Choose')[Math.floor(Math.random() * options[key].filter((v) => v !== 'You Choose').length)] : key === 'phrase' ? ['CREATE LOUD','DREAM IN COLOR','FUTURE LEGEND'][Math.floor(Math.random()*3)] : 'BooBoo chooses a coordinated accent'; persist(); render() })
+    body.querySelector('[data-you-choose]')?.addEventListener('click', () => { state[key] = key === 'phrase' || key === 'coordination' ? '' : 'You Choose';if(key==='phrase')state.phraseMode='auto'; persist(); render() })
+    body.querySelector('[data-surprise]')?.addEventListener('click', () => { state[key] = options[key] ? options[key].filter((v) => v !== 'You Choose')[Math.floor(Math.random() * options[key].filter((v) => v !== 'You Choose').length)] : key === 'phrase' ? '' : 'BooBoo chooses a coordinated accent';if(key==='phrase')state.phraseMode='auto'; persist(); render() })
     body.querySelector('[data-next]').addEventListener('click', () => { if (step === guidedSteps.length - 1) finish(composePrompt(state)); else { step += 1;persist();render() } })
   }
 
@@ -113,7 +113,7 @@ export function initWorkspace() {
 
   function formMarkup(extra = '') {
     const characterFields = `${field('character','CHARACTER',state.character)}${isMascotCharacter(state.character) ? field('mascot','ORIGINAL MASCOT TYPE',state.mascot) : ''}${isHumanCharacter(state.character) ? `${field('ethnicity','ETHNICITY / CULTURAL BACKGROUND',state.ethnicity)}${state.ethnicity === 'Custom' ? field('customCulturalBackground','CUSTOM CULTURAL BACKGROUND',state.customCulturalBackground,null) : ''}${field('hairstyle','HAIRSTYLE',state.hairstyle)}` : ''}`
-    return `<div class="form-grid">${field('age','AGE GROUP',state.age)}${field('product','PRODUCT',state.product)}${field('theme','THEME',state.theme)}${characterFields}${field('artStyle','ART STYLE',state.artStyle)}${field('fashion','FASHION',state.fashion)}${field('typography','TYPOGRAPHY',state.typography)}${field('phrase','EXACT PHRASE',state.phrase,null)}${field('palette','COLORS',state.palette)}${field('material','FAUX MATERIAL',state.material)}${field('production','PRINT METHOD',state.production)}${field('intensity','CREATIVE INTENSITY',state.intensity)}${extra}</div>`
+    return `<div class="form-grid">${field('age','AGE GROUP',state.age)}${field('product','PRODUCT',state.product)}${field('theme','THEME',state.theme)}${characterFields}${field('artStyle','ART STYLE',state.artStyle)}${field('fashion','FASHION',state.fashion)}${field('typography','TYPOGRAPHY',state.typography)}${field('phrase','EXACT PHRASE (OPTIONAL — AUTO-MATCHED IF BLANK)',state.phrase,null)}${field('palette','COLORS',state.palette)}${field('material','FAUX MATERIAL',state.material)}${field('production','PRINT METHOD',state.production)}${field('intensity','CREATIVE INTENSITY',state.intensity)}${extra}</div>`
   }
 
   function renderModeForm() {

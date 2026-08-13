@@ -2,6 +2,7 @@ import { options } from '../data/options.js'
 import { resolveAgePriorities } from './ageLogic.js'
 import { resolveCompatibility } from './compatibility.js'
 import { noveltyScore, remember } from './originality.js'
+import { themePhrase } from './phraseLogic.js'
 
 const keys = ['age','product','theme','mood','character','mascot','ethnicity','hairstyle','fashion','artStyle','pose','typography','palette','composition','material','production','sizing','intensity']
 const replacementKeys = new Set(['artStyle','typography','composition'])
@@ -19,7 +20,7 @@ export function shake(current, locks = new Set(), previous = new Set()) {
       const choices = options[key].filter((value) => value !== 'You Choose' && (!replacementKeys.has(key) || value !== current[key]))
       candidate[key] = pick(choices)
     })
-    if (!locks.has('phrase')) candidate.phrase = pick(['CREATE LOUD', 'DREAM IN COLOR', 'FUTURE LEGEND', 'KINDNESS ROCKS', 'PLAY ALL DAY', 'BORN TO CREATE'])
+    if (!locks.has('phrase')) candidate.phraseMode = 'auto'
     candidate.visualTwist = pick(visualTwists.filter((value) => value !== current.visualTwist))
     candidate = resolveCompatibility(resolveAgePriorities(candidate).selections).selections
     if (!locks.has('composition') && candidate.composition === current.composition) {
@@ -27,6 +28,7 @@ export function shake(current, locks = new Set(), previous = new Set()) {
       candidate.composition = pick(compatibleCompositions)
       candidate = resolveCompatibility(candidate).selections
     }
+    if (!locks.has('phrase')) candidate.phrase = themePhrase(candidate,tries,current.phrase)
     signature = keys.map((key) => candidate[key]).join('|')
     tries += 1
   } while (previous.has(signature) && tries < 20)

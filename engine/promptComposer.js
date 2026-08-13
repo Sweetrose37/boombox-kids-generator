@@ -5,6 +5,7 @@ import { fashionDirection } from '../data/fashion.js'
 import { artStyleLibrary, compositionLibrary, materialDirection, paletteDirection, typographyLibrary } from '../data/visualIntelligence.js'
 import { intensityDirection } from './intensity.js'
 import { controlledMaximalismCheck, creativeVolumeDirection } from './creativeVolume.js'
+import { resolvePhrase } from './phraseLogic.js'
 
 const clean = (value, fallback) => value && value !== 'You Choose' ? value : fallback
 const choose = (list, seed, offset=0) => list[(seed + offset) % list.length]
@@ -15,7 +16,7 @@ export function composePrompt(input, context = {}) {
   const compatible = resolveCompatibility({ ...ageResolved.selections, placement: context.placement || ageResolved.selections.placement })
   const s = compatible.selections
   const resolutions = [...ageResolved.resolutions, ...compatible.notes]
-  const phrase = s.typography === 'No typography' ? '' : (s.phrase || 'CREATE LOUD')
+  const phrase = resolvePhrase(s,context)
   const character = clean(s.character, 'an original inclusive character direction selected creatively without assuming identity traits')
   const diversitySeed = [...`${s.theme}${s.phrase}${s.age}`].reduce((sum,char) => sum + char.charCodeAt(0),0)
   const hair = isHumanCharacter(s.character) && hairLibrary[s.hairstyle] ? ` Hair direction: ${hairLibrary[s.hairstyle]}, without inferring identity or culture.` : ''
@@ -57,5 +58,5 @@ export function composePrompt(input, context = {}) {
     'Object discipline: add no crowns, stars, hearts, sunglasses, backpacks, paint cans, boomboxes, headphones, sports equipment, toys, graffiti splashes, jewelry, extra characters, or extra slogans unless explicitly requested by the concept; every object must earn its place. Quality safeguards: believable age-appropriate anatomy, correct limb count, natural hands and finger structure, natural posture, coherent facial features, correctly rooted hair, structurally believable garments, no duplicate body parts, fused limbs, warped faces, floating accessories, accidental duplicate characters, random text, brand logos, copyrighted characters, protected mascots, or trademarked graphics.',
   ].join(' ')
 
-  return { title: conceptTitle, direction: `${s.mood || 'Playful'} ${s.theme || 'creative'} direction for a ${s.age || 'Toddler'} ${s.product || 'T-shirt'}.`, prompt, production: s.production, age: s.age, product: s.product, resolutions }
+  return { title: conceptTitle, direction: `${s.mood || 'Playful'} ${s.theme || 'creative'} direction for a ${s.age || 'Toddler'} ${s.product || 'T-shirt'}.`, prompt, exactPhrase:phrase, production: s.production, age: s.age, product: s.product, resolutions }
 }
