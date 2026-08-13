@@ -16,10 +16,18 @@ import { readFile } from 'node:fs/promises'
 
 test('composer produces self-contained DTF direction and exact phrase', () => {
   const result = composePrompt({ ...defaults, phrase: 'CREATE Loud! 2026' })
+  assert.match(result.prompt, /^Generate the image now/i)
+  assert.match(result.prompt, /Do not rewrite, summarize, simplify, reinterpret/i)
   assert.match(result.prompt, /“CREATE Loud! 2026”/)
   assert.match(result.prompt, /transparent background/i)
   assert.match(result.prompt, /correct limb count/i)
   assert.match(result.prompt, /do not assume gender, race, ethnicity/i)
+})
+
+test('remix prompts tell ChatGPT to create the image without rewriting the prompt', () => {
+  const result = remixPrompt('Keep this exact concept.', [])
+  assert.match(result.prompt, /^Generate the image now/i)
+  assert.match(result.prompt, /Do not return a revised prompt/i)
 })
 
 test('age logic materially changes developmental direction', () => {

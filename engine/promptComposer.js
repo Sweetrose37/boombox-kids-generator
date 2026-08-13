@@ -7,6 +7,7 @@ import { intensityDirection } from './intensity.js'
 
 const clean = (value, fallback) => value && value !== 'You Choose' ? value : fallback
 const choose = (list, seed, offset=0) => list[(seed + offset) % list.length]
+export const imageExecutionLock = 'Generate the image now from the instructions below exactly as written. Do not rewrite, summarize, simplify, reinterpret, improve, omit, substitute, or add creative details. Do not return a revised prompt or ask follow-up questions; create the image.'
 
 export function composePrompt(input, context = {}) {
   const ageResolved = resolveAgePriorities(input)
@@ -32,6 +33,7 @@ export function composePrompt(input, context = {}) {
   const twist = s.visualTwist ? ` Creative twist: ${s.visualTwist}; execute it without adding unrequested objects.` : ''
 
   const prompt = [
+    imageExecutionLock,
     `Create an original, production-ready BOOMBOX KIDS™ kids-apparel design built around the concept “${s.theme || 'creative confidence'},” with a ${clean(s.mood, 'playful').toLowerCase()} emotional tone.`,
     `Design specifically for ${s.age || 'Toddler'}: use ${ageDirection(s.age)}. Never make the child appear younger, older, or adult.`,
     `Apply the artwork to a ${s.product || 'T-shirt'} with ${clean(s.sizing, 'age-appropriate youth fit').toLowerCase()} and structurally believable garment construction.${placementText}`,
