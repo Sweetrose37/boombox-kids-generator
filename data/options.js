@@ -21,6 +21,7 @@ export const options = {
   placement: ['Front graphic', 'Front + back graphics', 'Front + sleeve accent', 'Pocket area + back graphic', 'Panel treatment', 'Hem or border accent', 'All-over treatment'],
   relationship: ['Coordinated set', 'Siblings', 'Twins', 'Cousins', 'Parent + child', 'Grandparent + child', 'Best-friend kids', 'Family set'],
   collectionCount: ['4', '6', '8', '12'],
+  specialOccasion: ['Birthday', 'First birthday', 'Milestone birthday', 'Baby shower', 'New Year', 'Lunar New Year', 'Valentine’s Day', 'St. Patrick’s Day', 'Ramadan', 'Eid al-Fitr', 'Eid al-Adha', 'Holi', 'Passover', 'Easter / Spring celebration', 'Mother’s Day', 'Father’s Day', 'Graduation', 'Juneteenth', 'Pride celebration', 'Independence Day', 'Back to School', 'Halloween', 'Día de los Muertos', 'Diwali', 'Thanksgiving / Gratitude', 'Hanukkah', 'Christmas', 'Kwanzaa', 'Winter celebration', 'Family reunion', 'Custom'],
   remix: ['Stronger concept', 'Different age direction', 'Different character', 'Different art style', 'Different fashion', 'Stronger typography', 'Different composition', 'Different palette', 'Different faux materials', 'DTF optimization', 'Sublimation optimization', 'Make it more original', 'Make it more playful', 'Make it more fashion-forward'],
 }
 
@@ -29,7 +30,7 @@ export const defaults = {
   ethnicity: 'Not specified', customCulturalBackground: '', hairstyle: 'Not specified', fashion: 'Original streetwear', artStyle: 'Graffiti pop', pose: 'Dancing',
   typography: 'Playful bubble type', phrase: '', phraseMode: 'auto', palette: 'Neon cyan, pink, purple, and yellow',
   composition: 'Centered hero graphic', material: 'Faux chenille', production: 'DTF', sizing: 'Toddler-proportioned placement',
-  outfit: 'Hoodie + joggers', placement: 'Front + sleeve accent', relationship: 'Coordinated set', collectionCount: '4', coordination: 'Optional coordinated accessories', intensity: 'PLAYFUL',
+  outfit: 'Hoodie + joggers', placement: 'Front + sleeve accent', relationship: 'Coordinated set', collectionCount: '4', specialOccasion:'Birthday', birthdayAge:'', customOccasion:'', coordination: 'Optional coordinated accessories', intensity: 'PLAYFUL',
 }
 
 export const guidedSteps = [

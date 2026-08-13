@@ -37,10 +37,12 @@ export function composePrompt(input, context = {}) {
   const placementText = ` Placement-aware direction: ${s.resolvedPlacement}`
   const conceptTitle = `${s.theme || 'Original Kids Concept'} — ${s.product || 'Apparel'}`
   const twist = s.visualTwist ? ` Creative twist: ${s.visualTwist}; execute it without adding unrequested objects.` : ''
+  const occasion = context.specialOccasion ? `Special occasion: ${context.specialOccasion}${context.birthdayAge ? ` for age ${context.birthdayAge}` : ''}. Make the celebration unmistakable through original type, shape, color, pattern, and a few conceptually necessary motifs; do not add unrelated holiday filler.` : ''
 
   const prompt = [
     imageExecutionLock,
     `Create an original, production-ready BOOMBOX KIDS™ kids-apparel design built around the concept “${s.theme || 'creative confidence'},” with a ${clean(s.mood, 'playful').toLowerCase()} emotional tone.`,
+    occasion,
     `Developmental appropriateness for ${s.age || 'Toddler'}: use ${ageDirection(s.age)}. Never make the child appear younger, older, or adult. Developmental rules may alter how an idea is depicted but must not erase what makes it creative.`,
     `Design the isolated artwork for application to a ${s.product || 'T-shirt'} with ${clean(s.sizing, 'age-appropriate youth fit').toLowerCase()} and respect its structurally believable printable area; do not render the garment itself.${placementText}`,
     `Character direction: ${character.toLowerCase()}.${mascot}${ethnicity}${diversity} Pose or action: ${clean(s.pose, 'a natural age-appropriate action').toLowerCase()}.${hair} Do not assume gender, race, ethnicity, nationality, skin tone, hair texture, culture, religion, or family structure; honor only traits explicitly supplied and avoid stereotypes or tokenism.`,

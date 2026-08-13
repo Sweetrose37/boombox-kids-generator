@@ -6,6 +6,7 @@ import { buildMatchMini } from '../engine/matchMiniLogic.js'
 import { buildOutfit } from '../engine/outfitLogic.js'
 import { buildCollection } from '../engine/collectionLogic.js'
 import { remixPrompt } from '../engine/remixLogic.js'
+import { buildSpecialOccasion } from '../engine/specialOccasionLogic.js'
 import { loadState, saveState } from '../state/store.js'
 import { WorkspaceRepository } from '../workspace/repository.js'
 import { queryPrompts } from '../workspace/query.js'
@@ -16,7 +17,7 @@ import { clearDraft, exportSession, importSession, loadDraft, loadPreferences, s
 
 const modeNames = {
   'Build with BooBoo': 'BUILD WITH BOOBOO', 'Shake the Box': 'SHAKE THE BOX', 'Match My Mini': 'MATCH MY MINI™',
-  'Outfit Builder': 'OUTFIT BUILDER', 'Collection Builder': 'COLLECTION BUILDER', 'Remix My Prompt': 'REMIX MY PROMPT',
+  'Outfit Builder': 'OUTFIT BUILDER', 'Collection Builder': 'COLLECTION BUILDER', 'Special Occasions':'SPECIAL OCCASIONS', 'Remix My Prompt': 'REMIX MY PROMPT',
 }
 
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[char]))
@@ -52,7 +53,7 @@ export function initWorkspace() {
   const open = () => { overlay.classList.add('is-open'); overlay.setAttribute('aria-hidden','false'); document.body.classList.add('dialog-open') }
   const close = () => { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden','true'); document.body.classList.remove('dialog-open') }
   const closeSaved = () => { savedOverlay.classList.remove('is-open'); savedOverlay.setAttribute('aria-hidden','true'); document.body.classList.remove('dialog-open') }
-  const updateFields = () => body.querySelectorAll('[data-field]').forEach((input) => input.addEventListener('change', () => { state[input.dataset.field] = input.value;if(input.dataset.field==='phrase')state.phraseMode=input.value.trim()?'manual':'auto';persist(); if (['character','ethnicity'].includes(input.dataset.field)) render() }))
+  const updateFields = () => body.querySelectorAll('[data-field]').forEach((input) => input.addEventListener('change', () => { state[input.dataset.field] = input.value;if(input.dataset.field==='phrase')state.phraseMode=input.value.trim()?'manual':'auto';persist(); if (['character','ethnicity','specialOccasion'].includes(input.dataset.field)) render() }))
 
   function outputMarkup(result) {
     const resolutionNote = result.resolutions?.length ? `<p class="age-resolution-note"><strong>AGE PRIORITY APPLIED:</strong> ${result.resolutions.map((item) => `${escapeHtml(item.field)} adjusted to ${escapeHtml(item.to)}`).join(' • ')}</p>` : ''
@@ -121,9 +122,10 @@ export function initWorkspace() {
     if (mode === 'Match My Mini') extra = field('relationship','PAIRING / GROUP',state.relationship)
     if (mode === 'Outfit Builder') extra = field('outfit','OUTFIT',state.outfit) + field('placement','PLACEMENT',state.placement)
     if (mode === 'Collection Builder') extra = field('collectionCount','NUMBER OF PROMPTS',state.collectionCount)
-    body.innerHTML = `<p class="mode-intro">Set the shared creative direction. The engine will preserve coordination while forcing meaningful variation.</p>${formMarkup(extra)}<div class="builder-actions"><button data-build>BUILD PROMPT</button></div>`
+    if (mode === 'Special Occasions') extra = field('specialOccasion','SPECIAL OCCASION',state.specialOccasion) + (/birthday/i.test(state.specialOccasion) ? field('birthdayAge','BIRTHDAY AGE / MILESTONE (OPTIONAL)',state.birthdayAge,null) : '') + (state.specialOccasion === 'Custom' ? field('customOccasion','CUSTOM OCCASION / HOLIDAY',state.customOccasion,null) : '')
+    body.innerHTML = `<p class="mode-intro">${mode === 'Special Occasions' ? 'Build an original birthday, holiday, cultural, seasonal, school, or family-celebration design. Selected traditions stay distinct, respectful, and age-appropriate.' : 'Set the shared creative direction. The engine will preserve coordination while forcing meaningful variation.'}</p>${formMarkup(extra)}<div class="builder-actions"><button data-build>BUILD PROMPT</button></div>`
     updateFields()
-    body.querySelector('[data-build]').addEventListener('click', () => finish(mode === 'Match My Mini' ? buildMatchMini(state) : mode === 'Outfit Builder' ? buildOutfit(state) : buildCollection(state)))
+    body.querySelector('[data-build]').addEventListener('click', () => finish(mode === 'Match My Mini' ? buildMatchMini(state) : mode === 'Outfit Builder' ? buildOutfit(state) : mode === 'Special Occasions' ? buildSpecialOccasion(state) : buildCollection(state)))
   }
 
   function renderRemix() {

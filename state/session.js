@@ -3,7 +3,7 @@ import { defaults, options } from '../data/options.js'
 export const DRAFT_KEY='boombox-kids-phase6-draft'
 export const PREFERENCES_KEY='boombox-kids-phase6-preferences'
 export const INTRO_KEY='boombox-kids-phase6-intro-complete'
-const modes=['Build with BooBoo','Shake the Box','Match My Mini','Outfit Builder','Collection Builder','Remix My Prompt']
+const modes=['Build with BooBoo','Shake the Box','Match My Mini','Outfit Builder','Collection Builder','Special Occasions','Remix My Prompt']
 const read=(storage,key)=>{try{return JSON.parse(storage?.getItem(key)||'null')}catch{return null}}
 
 export function normalizePreferences(raw={}) {

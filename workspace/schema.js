@@ -10,7 +10,7 @@ export function normalizePrompt(raw={}) {
   return {
     id:text(raw.id) || uid(), title:text(raw.title,'Untitled Prompt').trim() || 'Untitled Prompt', designConcept:text(raw.designConcept || raw.direction),
     prompt:text(raw.prompt || raw.finalPrompt), exactPhrase:text(raw.exactPhrase), age:text(raw.age,'Not specified'), product:text(raw.product,'Not specified'), production:text(raw.production,'DTF'),
-    intensity:text(raw.intensity,'PLAYFUL'), artStyle:text(raw.artStyle), character:text(raw.character), mascot:text(raw.mascot), ethnicity:text(raw.ethnicity,'Not specified'), customCulturalBackground:text(raw.customCulturalBackground), typography:text(raw.typography), palette:text(raw.palette), material:text(raw.material),
+    intensity:text(raw.intensity,'PLAYFUL'), artStyle:text(raw.artStyle), character:text(raw.character), mascot:text(raw.mascot), ethnicity:text(raw.ethnicity,'Not specified'), customCulturalBackground:text(raw.customCulturalBackground), specialOccasion:text(raw.specialOccasion), birthdayAge:text(raw.birthdayAge), customOccasion:text(raw.customOccasion), typography:text(raw.typography), palette:text(raw.palette), material:text(raw.material),
     creationMode:text(raw.creationMode,'Build with BooBoo'), collectionIds:unique(raw.collectionIds), createdAt:text(raw.createdAt || raw.savedAt,now), modifiedAt:text(raw.modifiedAt || raw.savedAt,now), lastOpenedAt:text(raw.lastOpenedAt),
     favorite:Boolean(raw.favorite), notes:text(raw.notes), sourcePromptId:text(raw.sourcePromptId), settings:raw.settings && typeof raw.settings === 'object' ? { ...raw.settings } : {},
   }

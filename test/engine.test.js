@@ -12,6 +12,7 @@ import { resolveCompatibility } from '../engine/compatibility.js'
 import { intensityDirection } from '../engine/intensity.js'
 import { garmentDirection } from '../data/garments.js'
 import { intelligentShake } from '../engine/shakeLogic.js'
+import { buildSpecialOccasion } from '../engine/specialOccasionLogic.js'
 import { readFile } from 'node:fs/promises'
 
 test('composer produces self-contained DTF direction and exact phrase', () => {
@@ -303,11 +304,29 @@ test('Remix always converts the final deliverable to isolated DTF artwork',()=>{
   assert.match(result.prompt,/KEEP THIS/)
 })
 
-test('locked shell exposes all six modes and nine quick controls', async () => {
+test('Special Occasions builds birthday milestones with standalone typography and DTF output',()=>{
+  const result=buildSpecialOccasion({...defaults,specialOccasion:'First birthday',birthdayAge:'1'})
+  assert.match(result.title,/First birthday — age 1/i)
+  assert.match(result.prompt,/Special occasion: First birthday for age 1/i)
+  assert.ok(result.exactPhrase)
+  assert.notEqual(result.exactPhrase,'CREATE LOUD')
+  assert.equal(result.production,'DTF')
+  assert.match(result.prompt,/Mandatory DTF final deliverable/i)
+})
+
+test('Special Occasions supports respectful cultural holidays and custom occasions',()=>{
+  const cultural=buildSpecialOccasion({...defaults,specialOccasion:'Diwali'}),custom=buildSpecialOccasion({...defaults,specialOccasion:'Custom',customOccasion:'Neighborhood Heritage Day'})
+  assert.match(cultural.prompt,/Do not combine unrelated traditions, invent sacred symbols or scripture/i)
+  assert.match(cultural.prompt,/Festival of Light|Shine With Joy|Bright Hearts Glow|Light the Way|Joy in Every Color|Glow Together/i)
+  assert.match(custom.prompt,/Special occasion: Neighborhood Heritage Day/i)
+  assert.match(custom.title,/Neighborhood Heritage Day/i)
+})
+
+test('locked shell exposes all seven modes and nine quick controls', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8')
-  assert.equal((html.match(/data-mode=/g) || []).length, 6)
+  assert.equal((html.match(/data-mode=/g) || []).length, 7)
   assert.equal((html.match(/data-control=/g) || []).length, 9)
-  for (const mode of ['Build with BooBoo','Shake the Box','Match My Mini','Outfit Builder','Collection Builder','Remix My Prompt']) assert.match(html, new RegExp(`data-mode="${mode}"`))
+  for (const mode of ['Build with BooBoo','Shake the Box','Match My Mini','Outfit Builder','Collection Builder','Special Occasions','Remix My Prompt']) assert.match(html, new RegExp(`data-mode="${mode}"`))
 })
 
 test('Phase 2 contains no image generation feature or API', async () => {

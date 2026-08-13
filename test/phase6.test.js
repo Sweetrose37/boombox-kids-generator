@@ -8,6 +8,7 @@ import { buildMatchMini } from '../engine/matchMiniLogic.js'
 import { buildOutfit } from '../engine/outfitLogic.js'
 import { buildCollection } from '../engine/collectionLogic.js'
 import { remixPrompt } from '../engine/remixLogic.js'
+import { buildSpecialOccasion } from '../engine/specialOccasionLogic.js'
 import { resolveAgePriorities } from '../engine/ageLogic.js'
 import { resolveCompatibility } from '../engine/compatibility.js'
 import { WorkspaceRepository } from '../workspace/repository.js'
@@ -43,10 +44,10 @@ test('preferences and intro state are local, normalized, and backup-compatible',
   target.setItem('boombox-kids-phase6-preferences','not-json');assert.equal(loadPreferences(target).age,defaults.age)
 })
 
-test('all six modes produce compatible prompt output architecture',()=>{
+test('all seven modes produce compatible prompt output architecture',()=>{
   const state={...defaults,phrase:'KEEP THIS EXACT',phraseMode:'manual'}
   const shaken=intelligentShake(state,new Set(['phrase']),[])
-  const outputs=[composePrompt(state),composePrompt(shaken),buildMatchMini(state),buildOutfit(state),buildCollection({...state,collectionCount:'4'}),remixPrompt(composePrompt(state).prompt,['Stronger concept'])]
+  const outputs=[composePrompt(state),composePrompt(shaken),buildMatchMini(state),buildOutfit(state),buildCollection({...state,collectionCount:'4'}),buildSpecialOccasion({...state,specialOccasion:'Birthday'}),remixPrompt(composePrompt(state).prompt,['Stronger concept'])]
   outputs.forEach((item)=>{assert.equal(typeof item.title,'string');assert.equal(typeof item.direction,'string');assert.equal(typeof item.prompt,'string');assert.ok(item.age);assert.ok(item.product);assert.equal(item.production,'DTF')})
 })
 
@@ -142,4 +143,13 @@ test('Shake UI explains automatic replacement and lock protection',async()=>{
   const ui=await readFile(new URL('../ui/workspace.js',import.meta.url),'utf8')
   assert.match(ui,/Every shake replaces the previous unlocked art style, typography, and composition/)
   assert.match(ui,/Lock what you love before shaking/)
+})
+
+test('Special Occasions UI exposes holidays birthdays custom entry and responsive card',async()=>{
+  const [html,optionsSource,ui,css]=await Promise.all(['../index.html','../data/options.js','../ui/workspace.js','../styles.css'].map((path)=>readFile(new URL(path,import.meta.url),'utf8')))
+  assert.match(html,/data-mode="Special Occasions"/)
+  assert.match(optionsSource,/specialOccasion: \['Birthday'.*'Custom'\]/)
+  assert.match(ui,/BIRTHDAY AGE \/ MILESTONE/)
+  assert.match(ui,/CUSTOM OCCASION \/ HOLIDAY/)
+  assert.match(css,/\.mode-grid \{[^}]*grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/)
 })
