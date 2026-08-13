@@ -81,10 +81,13 @@ test('age priority prevents baby products and placement for teens', () => {
   assert.doesNotMatch(result.prompt, /baby-safe placement/i)
 })
 
-test('sublimation behavior differs from DTF', () => {
-  const prompt = composePrompt({ ...defaults, production: 'Sublimation' }).prompt
-  assert.match(prompt, /edge-to-edge composition/i)
-  assert.doesNotMatch(prompt, /isolated artwork on a transparent background/i)
+test('all generator requests resolve to mandatory DTF artwork', () => {
+  const result = composePrompt({ ...defaults, production: 'Sublimation' })
+  assert.equal(result.production,'DTF')
+  assert.match(result.prompt,/Mandatory DTF final deliverable/i)
+  assert.match(result.prompt,/genuinely transparent background/i)
+  assert.match(result.prompt,/not a garment mockup, model, child wearing the garment/i)
+  assert.ok(result.resolutions.some((item)=>item.field==='production'&&item.to==='DTF'))
 })
 
 test('mascot compatibility suppresses human hairstyle controls', () => {
@@ -290,6 +293,14 @@ test('Remix preserves source and exact phrase', () => {
   assert.match(result.prompt, /scale, typography interaction, composition, dimensionality/i)
   assert.match(result.prompt, /not by piling on props/i)
   assert.equal(result.production, 'DTF')
+})
+
+test('Remix always converts the final deliverable to isolated DTF artwork',()=>{
+  const result=remixPrompt('A sublimation shirt scene with exact phrase “KEEP THIS”.',['Sublimation optimization'])
+  assert.equal(result.production,'DTF')
+  assert.match(result.prompt,/Convert the final deliverable to DTF-ready isolated artwork/i)
+  assert.match(result.prompt,/no garment, model, mannequin, hanger, product mockup/i)
+  assert.match(result.prompt,/KEEP THIS/)
 })
 
 test('locked shell exposes all six modes and nine quick controls', async () => {

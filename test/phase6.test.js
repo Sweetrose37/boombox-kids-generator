@@ -47,7 +47,15 @@ test('all six modes produce compatible prompt output architecture',()=>{
   const state={...defaults,phrase:'KEEP THIS EXACT',phraseMode:'manual'}
   const shaken=intelligentShake(state,new Set(['phrase']),[])
   const outputs=[composePrompt(state),composePrompt(shaken),buildMatchMini(state),buildOutfit(state),buildCollection({...state,collectionCount:'4'}),remixPrompt(composePrompt(state).prompt,['Stronger concept'])]
-  outputs.forEach((item)=>{assert.equal(typeof item.title,'string');assert.equal(typeof item.direction,'string');assert.equal(typeof item.prompt,'string');assert.ok(item.age);assert.ok(item.product);assert.ok(item.production)})
+  outputs.forEach((item)=>{assert.equal(typeof item.title,'string');assert.equal(typeof item.direction,'string');assert.equal(typeof item.prompt,'string');assert.ok(item.age);assert.ok(item.product);assert.equal(item.production,'DTF')})
+})
+
+test('all multi-design modes remain DTF-only even from a Sublimation state',()=>{
+  const state={...defaults,production:'Sublimation'}
+  for(const output of [buildMatchMini(state),buildOutfit(state),buildCollection({...state,collectionCount:'4'})]){
+    assert.equal(output.production,'DTF')
+    output.items.forEach((item)=>{assert.equal(item.production,'DTF');assert.match(item.prompt,/Mandatory DTF final deliverable/i);assert.match(item.prompt,/do not render the garment itself/i)})
+  }
 })
 
 test('coordinated sets and collections preserve exact phrases in every item',()=>{
